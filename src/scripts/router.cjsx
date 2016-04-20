@@ -11,13 +11,13 @@ Router = require('react-router')
 Route = Router.Route
 
 # Require route components.
-HelloWorld = require './hello_world'
+AirlineTycoon = require './airline_tycoon'
 StyleGuide = require './styleguide'
 App = require './app'
 
 routes = (
   <Route handler={App}>
-    <Route name="hello" handler={HelloWorld} path="/" />
+    <Route name="hello" handler={AirlineTycoon} path="/" />
     <Route name="styleguide" handler={StyleGuide} path="/styleguide" />
   </Route>
 )
