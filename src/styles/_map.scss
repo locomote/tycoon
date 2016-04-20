@@ -1,0 +1,28 @@
+
+body {
+  // Development night mode! (a.k.a wife-no-hurty-when-trying-sleepy)
+  // background-color: #000 !important;
+  // -webkit-filter: invert(1);
+  // filter: invert(1);
+}
+
+#map {
+  background-image: url(/images/map.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 1300px;
+  height: 700px;
+  position: relative;
+
+  font-size: 12px;
+  font-family: 'Verdana'
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  margin-bottom: 0;
+}
