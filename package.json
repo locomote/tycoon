@@ -64,6 +64,6 @@
     "watch": "./node_modules/.bin/gulp watch",
     "build": "./node_modules/.bin/gulp build",
     "test": "jest",
-    "start": "npm start watch"
+    "start": "npm start"
   }
 }
