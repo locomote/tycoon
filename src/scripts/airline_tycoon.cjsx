@@ -13,9 +13,9 @@ pink = '#d5a6bd'
 blue = '#9fc5e8'
 grey = '#eeeeee'
 
-player1 = name: 'Blue',   color: blue, money: 0, hq: airports[2]
-player2 = name: 'Pink',   color: pink, money: 0, hq: airports[0]
-nobody =  name: 'Nobody', color: grey, money: 0, hq: airports[1]
+player1 = name: 'Blue',   color: blue, money: 0, hq: Airport.list[2]
+player2 = name: 'Pink',   color: pink, money: 0, hq: Airport.list[0]
+nobody  =  name: 'Nobody', color: grey, money: 0, hq: Airport.list[1]
 
 player1.hq.owner = player1
 player2.hq.owner = player2
