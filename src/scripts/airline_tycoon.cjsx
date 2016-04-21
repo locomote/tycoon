@@ -136,12 +136,10 @@ Airport = React.createClass
     @setState(selected: false)
 
   render: ->
-    # There are here cause it was quick and I'm lazy, but parts probably be better suited in CSS.
     style =
       backgroundColor: @props.owner.color
       top: @props.top
       left: @props.left
-
 
     if @state.selected
       _.extend style, border: '2px solid green'
@@ -154,9 +152,7 @@ Airport = React.createClass
 
 Route = React.createClass
   render: ->
-    # There are here cause it was quick and I'm lazy, but parts probably be better suited in CSS.
     style =
-      backgroundColor: '#ccc'
       left: @props.x
       top: @props.y
 
