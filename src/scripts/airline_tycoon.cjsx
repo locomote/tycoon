@@ -1,13 +1,14 @@
-_            = require 'lodash'
-Link         = require('react-router').Link
-ReactDOM     = require 'react-dom'
-Flight       = require './flight'
-PlaneList    = require '../components/plane_list'
-FunButtons   = require '../components/fun_buttons'
-MoneyBalance = require '../components/money_balance'
-LoyaltyList  = require '../components/loyalty_list'
+_             = require 'lodash'
+Link          = require('react-router').Link
+ReactDOM      = require 'react-dom'
+Flight        = require './flight'
+PlaneList     = require '../components/plane_list'
+FunButtons    = require '../components/fun_buttons'
+MoneyBalance  = require '../components/money_balance'
+LoyaltyList   = require '../components/loyalty_list'
 AlertOverlay  = require '../components/alert_overlay'
-VectorCalc   = require './vector_calc'
+VectorCalc    = require './vector_calc'
+PathAnimation = require './path_animation'
 
 require('./message_bus')
 { Route, Airport, Plane, Loyalty, Alert } = require '../data'
@@ -101,12 +102,11 @@ scheduleFlight = (startAirportCode, endAirportCode) ->
   MessageBus.publish 'dataChange'
 
 landPlane = (plane) ->
-  ->
-    # @todo flight ordering on landing
-    plane.location = plane.location.split('->')[1]
-    MessageBus.publish 'landed', plane
-    MessageBus.publish 'dataChange'
-    console.log "landed in #{plane.location}!"
+  # @todo flight ordering on landing
+  plane.location = plane.location.split('->')[1]
+  MessageBus.publish 'landed', plane
+  MessageBus.publish 'dataChange'
+  console.log "landed in #{plane.location}!"
 
 newCustomers = ->
   for airport in Airport.list
@@ -137,7 +137,7 @@ module.exports = React.createClass
       [ p1, p2, p3, p4 ] = VectorCalc.gentleBezier(s,e)
       directions = "M#{p1.x} #{p1.y} C #{p3.x} #{p3.y}, #{p4.x} #{p4.y}, #{p2.x} #{p2.y}"
 
-      curve = <SVGPath key={route.key} d={directions} strokeWidth="2" stroke="#ccc" fill="transparent" strokeDasharray="10,10" />
+      curve = <SVGPath id="path-#{route.key}" key={route.key} d={directions} strokeWidth="2" stroke="#ccc" fill="transparent" strokeDasharray="10,10" />
 
       line = (v, c) -> <SVGPath d="M0 0 #{v.x} #{v.y}" stroke={c} strokeWidth="3" />
 
@@ -213,18 +213,15 @@ RouteMarker = React.createClass
   animateFlights: ->
     newPlanes = _.difference Plane.at(@props.name), @planes
     if !_.isEmpty(newPlanes)
-      for plane in newPlanes
-        setTimeout landPlane(plane), 1000 # @todo set according to distance between airports
-
       @planes = Plane.at(@props.name)
 
-  render: ->
-    style =
-      left: @props.x
-      top: @props.y
+  done: (plane) ->
+    ->
+      landPlane(plane)
 
-    <div className='route marker' style={style}>
-      <div style={marginTop: 20, width: 100}>{@props.name}</div>
-      <PlaneList planes={Plane.at(@props.name)} />
-    </div>
+  render: ->
+    animations = for plane in @planes
+      <PathAnimation key={plane.name} node={"path-#{plane.location}"} onDone={@done(plane)} />
+
+    <div>{animations}</div>
 
