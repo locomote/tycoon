@@ -5,9 +5,10 @@ Flight       = require './flight'
 PlaneList    = require '../components/plane_list'
 FunButtons   = require '../components/fun_buttons'
 MoneyBalance = require '../components/money_balance'
+LoyaltyList  = require '../components/loyalty_list'
 
 require('./message_bus')
-{ Route, Airport, Plane } = require '../data'
+{ Route, Airport, Plane, Loyalty } = require '../data'
 
 pink = '#d5a6bd'
 blue = '#9fc5e8'
@@ -29,7 +30,14 @@ Plane.create [
   {name: 'Plane5', flights_flown: 0, location: 'NYC', owner: player2},
   {name: 'Plane6', flights_flown: 0, location: 'NYC', owner: player2}
 ]
-
+Loyalty.create [
+  { location: 'NYC', amount: 0, owner: player1 },
+  { location: 'LHR', amount: 0, owner: player1 },
+  { location: 'DUB', amount: 0, owner: player1 },
+  { location: 'NYC', amount: 0, owner: player2 },
+  { location: 'LHR', amount: 0, owner: player2 },
+  { location: 'DUB', amount: 0, owner: player2 }
+]
 
 
 Game =
@@ -40,13 +48,26 @@ Game =
     # @todo retire planes flown > 4
     plane.flights_flown++
 
-    player = plane.owner
     # Reward every landing
-    player.money += 100
+    owner = plane.owner
+    owner.money += 100
 
-    if player.money >= 300
+    # Loyalty increases when Airport is not ours
+    loyalty = Loyalty.find(location: plane.location, owner: owner)
+    airport = Airport.find(name: plane.location)
+    if airport.owner != owner
+      loyalty.amount += 20
+
+      # Airport becomes ours once loyalty reaches 100%
+      if loyalty.amount >= 100
+        airport.owner = owner
+
+        # It's a big marketing win, all other loyalties take a hit!
+        loyalty.amount = 0 for loyalty in Loyalty.where(location: airport.name)
+
+    if owner.money >= 300
       # Buy more planes!
-      buyPlane(player)
+      buyPlane(owner)
 
     MessageBus.publish 'dataChange'
 
@@ -139,6 +160,7 @@ AirportMarker = React.createClass
       <div style={marginTop: 20, width: 100}><b>{@props.name}</b></div>
       <PlaneList planes={Plane.at(@props.name)} />
       <div className='customers'>D:{@props.customers}</div>
+      <LoyaltyList loyalties={Loyalty.where(location: @props.name)} />
     </div>
 
 RouteMarker = React.createClass
