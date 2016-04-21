@@ -54,7 +54,7 @@ Game =
 MessageBus.subscribe(Game, 'landed', Game.landedHandler)
 
 buyPlane = (player) ->
-  Plane.createFor(owner)
+  Plane.createFor(player)
   player.money -= 300
   MessageBus.publish 'dataChange'
 
