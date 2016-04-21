@@ -31,9 +31,9 @@ planes_at = (location) ->
 
 # Duplicating name/key as you need unique keys, but can't do @props.key for name...
 airports = [
-  {key: 'NYC', name: 'NYC', left: 330, top:  300, owner: player2 },
-  {key: 'LHR', name: 'LHR', left: 580, top:  250, owner: nobody },
-  {key: 'DUB', name: 'DUB', left: 770, top:  380, owner: player1 }
+  {key: 'NYC', name: 'NYC', left: 330, top:  300, owner: player2, customers: 200 },
+  {key: 'LHR', name: 'LHR', left: 580, top:  250, owner: nobody, customers: 200 },
+  {key: 'DUB', name: 'DUB', left: 770, top:  380, owner: player1, customers: 200 }
 ]
 
 # Some "virtual" places flight can live when they're moving between airports
@@ -43,6 +43,17 @@ routes = [
   { key: 'LHR->DUB', name: 'LHR->DUB', start: 'LHR', end: 'DUB', x: 710, y: 280 },
   { key: 'DUB->LHR', name: 'DUB->LHR', start: 'DUB', end: 'LHR', x: 660, y: 340 }
 ]
+
+newCustomers = ->
+  for airport in airports
+    # Terminals with planes gain 50 passengers each second
+    if planes_at(airport.name).length != 0
+      airport.customers += 50
+      MessageBus.publish 'dataChange'
+
+# Game Loop!
+setInterval newCustomers, 1000
+
 
 lets_all_go_to_nyc = ->
   plane.location = 'NYC' for plane in planes
@@ -96,6 +107,7 @@ Airport = React.createClass
     <div className='airport' style={style}>
       <div style={marginTop: 20, width: 100}>{@props.name} - {@props.owner.name}</div>
       <PlaneList planes={planes_at(@props.name)} />
+      <div>Customers: {@props.customers}</div>
     </div>
 
 Route = React.createClass
