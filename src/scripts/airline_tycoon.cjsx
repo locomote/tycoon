@@ -23,6 +23,10 @@ nobody =
   name: 'Nobody'
   color: grey
 
+airports[0].owner = player2
+airports[1].owner = nobody
+airports[2].owner = player1
+
 planes = [
   {name: 'Plane1', flights_flown: 0, location: 'DUB', owner: player1},
   {name: 'Plane2', flights_flown: 0, location: 'DUB', owner: player1},
@@ -35,10 +39,6 @@ planes = [
 planes_at = (location) ->
   plane for plane in planes when plane.location == location
 
-airports[0].owner = player2
-airports[1].owner = nobody
-airports[2].owner = player1
-
 planes_for = (player) ->
   plane for plane in planes when plane.owner == player
 
@@ -47,21 +47,6 @@ player2_planes = ->
 
 player1_planes = ->
   planes_for(player1)
-
-# Duplicating name/key as you need unique keys, but can't do @props.key for name...
-# airports = [
-#   {key: 'NYC', name: 'NYC', left: 330, top:  300, owner: player2, customers: 200 },
-#   {key: 'LHR', name: 'LHR', left: 580, top:  250, owner: nobody, customers: 200 },
-#   {key: 'DUB', name: 'DUB', left: 770, top:  380, owner: player1, customers: 200 }
-# ]
-
-# Some "virtual" places flight can live when they're moving between airports
-# routes = [
-#   { key: 'NYC->LHR', name: 'NYC->LHR', start: 'NYC', end: 'LHR', x: 450, y: 240 },
-#   { key: 'LHR->NYC', name: 'LHR->NYC', start: 'LHR', end: 'NYC', x: 472, y: 326 },
-#   { key: 'LHR->DUB', name: 'LHR->DUB', start: 'LHR', end: 'DUB', x: 710, y: 280 },
-#   { key: 'DUB->LHR', name: 'DUB->LHR', start: 'DUB', end: 'LHR', x: 660, y: 340 }
-# ]
 
 newCustomers = ->
   for airport in airports

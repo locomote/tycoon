@@ -1,5 +1,6 @@
 Link = require('react-router').Link
-highlightJS = require 'highlight.js'
+# Highlight sometimes bombs: https://github.com/webpack/webpack/issues/1721
+# highlightJS = require 'highlight.js'
 RetinaImage = require 'react-retina-image'
 
 # Simple HTML element styleguide to demonstrate default css stylings.
@@ -8,7 +9,7 @@ module.exports = React.createClass
 
   componentDidMount: ->
     window.scroll(0,0)
-    highlightJS.highlightBlock(@refs.code.getDOMNode(), 'scss')
+    # highlightJS.highlightBlock(@refs.code.getDOMNode(), 'scss')
 
   render: ->
     <div>
