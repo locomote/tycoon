@@ -24,7 +24,6 @@ nobody =
   color: grey
 
 ThePlayer       = player1
-selectedAirport = null # horrible
 
 airports[0].owner = player2
 airports[1].owner = nobody
@@ -61,12 +60,13 @@ newCustomers = ->
 # Game Loop!
 requestAnimationFrame newCustomers
 
-fly_to = (locationCode) ->
-  return unless selectedAirport
+fly_to = (destinationCode) ->
+  return unless airportSelected()
   plane          = _.first planes
-  plane.location = selectedAirport
-  plane.enroute  = "#{ plane.location }->#{ locationCode }"
+  plane.location = airportSelected()
+  plane.enroute  = "#{ plane.location.name }->#{ destinationCode }"
   ReactDOM.render(<Flight plane={plane} />, document.createElement "div")
+  deselectAirports()
 
 lets_all_go_to_nyc = ->
   plane.location = 'NYC' for plane in planes
@@ -110,30 +110,39 @@ module.exports = React.createClass
       <button onClick={fly_to_lhr}>Lets animate to LHR!</button>
     </div>
 
+airportSelected = ->
+  _.find airports, selected: true
+
+selectAirport = (airportCode) ->
+  airport.selected = false for airport in airports
+  airport.selected = true  for airport in airports when airport.name == airportCode
+  MessageBus.publish 'dataChange'
+
+deselectAirports = (airportCode) ->
+  airport.selected = false for airport in airports
+  MessageBus.publish 'dataChange'
+
+scheduleFlight = (startAirportCode, endAirportCode) ->
+  # @todo only send our own planes
+  plane = _.first (planes_at startAirportCode)
+  plane.location = "#{startAirportCode}->#{endAirportCode}"
+  MessageBus.publish 'dataChange'
+
+
 Airport = React.createClass
   mixins: [MessageBusMixin]
 
-  getInitialState: ->
-    selected: false
+  select: ->
+    if airportSelected()?
+      if airportSelected().name != @props.name
+        console.log "Flying #{airportSelected().name}->#{@props.name}"
+        scheduleFlight airportSelected().name, @props.name
 
-  componentDidMount: ->
-    @subscribe('deselectAirports', @deselect)
-
-  componentWillUnmount: ->
-    @unsubscribe('deselectAirports')
-
-  onClick: ->
-    if @props.owner is ThePlayer
-      selectedAirport = @props.name
-      MessageBus.publish 'deselectAirports'
-      @setState(selected: true)
-      @forceUpdate()
-
+      deselectAirports()
+      console.log('deselected')
     else
-      fly_to @props.name
-
-  deselect: ->
-    @setState(selected: false)
+      selectAirport @props.name
+      console.log('selected')
 
   render: ->
     style =
@@ -141,16 +150,44 @@ Airport = React.createClass
       top: @props.top
       left: @props.left
 
-    if @state.selected
+    if @props.selected
       _.extend style, border: '2px solid green'
 
-    <div className='airport locbox' style={style} onClick={@onClick}>
+    <div className='airport locbox' style={style} onClick={@select}>
       <div style={marginTop: 20, width: 100}><b>{@props.name}</b></div>
       <PlaneList planes={planes_at(@props.name)} />
       <div className='customers'>D:{@props.customers}</div>
     </div>
 
+landPlane = (plane) ->
+  ->
+    # @todo flight ordering on landing
+    plane.location = plane.location.split('->')[1]
+    MessageBus.publish 'dataChange'
+    console.log "landed in #{plane.location}!"
+
 Route = React.createClass
+  mixins: [MessageBusMixin]
+
+  # This is also bad, but it appears that setState is _potentially_ async so we can't rely on it for
+  # sync read/write as required in animateFlights so we're not processing the same flight multiple times
+  planes: []
+
+  getInitialState: ->
+    @planes = planes_at(@props.name) # hack as @props is not available at init time
+    null
+
+  componentDidMount:    -> @subscribe   'dataChange', @animateFlights
+  componentWillUnmount: -> @unsubscribe 'dataChange'
+
+  animateFlights: ->
+    newPlanes = _.difference planes_at(@props.name), @planes
+    if !_.isEmpty(newPlanes)
+      for plane in newPlanes
+        setTimeout landPlane(plane), 3000 # @todo set according to distance between airports
+
+      @planes = planes_at(@props.name)
+
   render: ->
     style =
       left: @props.x
