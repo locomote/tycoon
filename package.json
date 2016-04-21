@@ -61,9 +61,8 @@
   "main": "server.coffee",
   "repository": "git@github.com:KyleAMathews/coffee-react-quickstart.git",
   "scripts": {
-    "watch": "./node_modules/.bin/gulp watch",
+    "start": "./node_modules/.bin/gulp watch",
     "build": "./node_modules/.bin/gulp build",
-    "test": "jest",
-    "start": "npm start"
+    "test": "jest"
   }
 }
