@@ -26,3 +26,38 @@ ul {
 ul li {
   margin-bottom: 0;
 }
+
+.locbox {
+  border: 1px solid #000;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+}
+
+.planelist {
+  width: 50px;
+  background-color: #ccc;
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+  border-right: 1px solid #eee;
+
+  position: absolute;
+  top: 0;
+  left: 35px;
+
+  li {
+    list-style-type: none;
+    font-size: 10px;
+    line-height: 10px;
+    padding: 2px;
+    border-bottom: 1px solid #eee;
+  }
+}
+
+.customers {
+  font-size: 10px;
+  position: absolute;
+  width: 100px;
+  top: 30px;
+  left: 0px;
+}

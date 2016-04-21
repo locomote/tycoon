@@ -80,7 +80,7 @@ Flight = React.createClass
       transform: "rotate(#{ @props.plane.angle }deg)"
 
     <RenderInBody>
-      <img class='flight' style={style} title={@props.plane.name} src='./images/plane.png'></img>
+      <img className='flight' style={style} title={@props.plane.name} src='./images/plane.png'></img>
     </RenderInBody>
 
 module.exports = Flight

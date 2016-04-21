@@ -55,7 +55,7 @@ newCustomers = ->
   for airport in airports
     # Terminals with planes gain 50 passengers each second
     if planes_at(airport.name).length != 0
-      airport.customers += 50
+      airport.customers += 50 if airport.customers < 1000
       MessageBus.publish 'dataChange'
 
 # Game Loop!
@@ -139,20 +139,17 @@ Airport = React.createClass
     # There are here cause it was quick and I'm lazy, but parts probably be better suited in CSS.
     style =
       backgroundColor: @props.owner.color
-      border: '1px solid #000'
-      height: 20
-      width: 20
-      position: 'absolute'
       top: @props.top
       left: @props.left
+
 
     if @state.selected
       _.extend style, border: '2px solid green'
 
-    <div className='airport' style={style} onClick={@onClick}>
-      <div style={marginTop: 20, width: 100}><b>{@props.name} - {@props.owner.name}</b></div>
+    <div className='airport locbox' style={style} onClick={@onClick}>
+      <div style={marginTop: 20, width: 100}><b>{@props.name}</b></div>
       <PlaneList planes={planes_at(@props.name)} />
-      <div><b>Customers: {@props.customers}</b></div>
+      <div className='customers'>D:{@props.customers}</div>
     </div>
 
 Route = React.createClass
@@ -160,20 +157,18 @@ Route = React.createClass
     # There are here cause it was quick and I'm lazy, but parts probably be better suited in CSS.
     style =
       backgroundColor: '#ccc'
-      border: '1px solid #000'
-      height: 20
-      width: 20
-      position: 'absolute'
       left: @props.x
       top: @props.y
 
-    <div className='route' style={style}>
+    <div className='route locbox' style={style}>
       <div style={marginTop: 20, width: 100}>{@props.name}</div>
       <PlaneList planes={planes_at(@props.name)} />
     </div>
 
 PlaneList = React.createClass
   render: ->
+    return <div/> if @props.planes.length == 0
+
     plane_components = (<li key={plane.name}>{plane.name}</li> for plane in @props.planes)
 
-    <ul style={width: 200, color: 'blue' }>{plane_components}</ul>
+    <ul className='planelist'>{plane_components}</ul>
