@@ -23,6 +23,9 @@ nobody =
   name: 'Nobody'
   color: grey
 
+ThePlayer       = player1
+selectedAirport = null # horrible
+
 airports[0].owner = player2
 airports[1].owner = nobody
 airports[2].owner = player1
@@ -56,10 +59,12 @@ newCustomers = ->
       MessageBus.publish 'dataChange'
 
 # Game Loop!
-setInterval newCustomers, 1000
+requestAnimationFrame newCustomers
 
 fly_to = (locationCode) ->
+  return unless selectedAirport
   plane          = _.first planes
+  plane.location = selectedAirport
   plane.enroute  = "#{ plane.location }->#{ locationCode }"
   ReactDOM.render(<Flight plane={plane} />, document.createElement "div")
 
@@ -106,6 +111,30 @@ module.exports = React.createClass
     </div>
 
 Airport = React.createClass
+  mixins: [MessageBusMixin]
+
+  getInitialState: ->
+    selected: false
+
+  componentDidMount: ->
+    @subscribe('deselectAirports', @deselect)
+
+  componentWillUnmount: ->
+    @unsubscribe('deselectAirports')
+
+  onClick: ->
+    if @props.owner is ThePlayer
+      selectedAirport = @props.name
+      MessageBus.publish 'deselectAirports'
+      @setState(selected: true)
+      @forceUpdate()
+
+    else
+      fly_to @props.name
+
+  deselect: ->
+    @setState(selected: false)
+
   render: ->
     # There are here cause it was quick and I'm lazy, but parts probably be better suited in CSS.
     style =
@@ -117,7 +146,10 @@ Airport = React.createClass
       top: @props.top
       left: @props.left
 
-    <div className='airport' style={style}>
+    if @state.selected
+      _.extend style, border: '2px solid green'
+
+    <div className='airport' style={style} onClick={@onClick}>
       <div style={marginTop: 20, width: 100}><b>{@props.name} - {@props.owner.name}</b></div>
       <PlaneList planes={planes_at(@props.name)} />
       <div><b>Customers: {@props.customers}</b></div>

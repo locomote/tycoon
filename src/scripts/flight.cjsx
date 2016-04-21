@@ -2,9 +2,8 @@ _                  = require 'lodash'
 ReactDOM           = require 'react-dom'
 RenderInBody       = require './render_in_body'
 Calc               = require './calculator.coffee'
+require('./message_bus')
 {routes, airports} = require '../data'
-
-FRAME_RATE = 60 #FPS
 
 Flight = React.createClass
   maxSpeed: 2
@@ -37,6 +36,7 @@ Flight = React.createClass
 
     parent = ReactDOM.findDOMNode(@).parentNode
     ReactDOM.unmountComponentAtNode parent
+    MessageBus.publish 'dataChange'
 
   animate: ->
     target = @endCoords()
@@ -73,15 +73,14 @@ Flight = React.createClass
   render: ->
     style =
       position : 'absolute'
-      width    : '10px'
-      height   : '10px'
+      width    : '40px'
+      height   : '40px'
       left     : @props.plane.x
       top      : @props.plane.y
-      border   : '1px dotted lightgray'
       transform: "rotate(#{ @props.plane.angle }deg)"
 
     <RenderInBody>
-      <div class='flight' style={style} title={@props.plane.name}> v </div>
+      <img class='flight' style={style} title={@props.plane.name} src='./images/plane.png'></img>
     </RenderInBody>
 
 module.exports = Flight
