@@ -1,3 +1,4 @@
 module.exports =
-  routes   : require './routes.coffee'
-  airports : require './airports.coffee'
+  Route   : require './route.coffee'
+  Airport : require './airport.coffee'
+  Plane   : require './plane.coffee'
