@@ -4,6 +4,7 @@ ReactDOM     = require 'react-dom'
 Flight       = require './flight'
 PlaneList    = require '../components/plane_list'
 FunButtons   = require '../components/fun_buttons'
+MoneyBalance = require '../components/money_balance'
 
 require('./message_bus')
 
@@ -16,10 +17,12 @@ grey = '#eeeeee'
 player1 =
   name: 'Blue'
   color: blue
+  money: 0
 
 player2 =
   name: 'Pink'
   color: pink
+  money: 0
 
 nobody =
   name: 'Nobody'
@@ -72,6 +75,8 @@ landPlane = (plane) ->
   ->
     # @todo flight ordering on landing
     plane.location = plane.location.split('->')[1]
+    plane.flights_flown++
+    plane.owner.money += 100
     MessageBus.publish 'dataChange'
     console.log "landed in #{plane.location}!"
 
@@ -101,6 +106,7 @@ module.exports = React.createClass
     <div id='map'>
       {airport_components}
       {route_components}
+      <MoneyBalance players={[player1, player2]} />
       <FunButtons planes={planes} />
     </div>
 

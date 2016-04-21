@@ -66,3 +66,21 @@ ul li {
   top: 30px;
   left: 0px;
 }
+
+.dollar-list {
+  position: absolute;
+  width: 100px;
+  margin-left: -50px;
+  bottom: 20px;
+  left: 50%;
+
+  .dollars {
+    background-image: url(/images/coins.png);
+    background-repeat: no-repeat;
+    background-position: top left;
+    padding-left: 18px;
+    background-size: contain;
+    padding-right: 12px;
+    font-weight: bold;
+  }
+}
