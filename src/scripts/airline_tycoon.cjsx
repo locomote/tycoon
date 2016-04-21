@@ -128,7 +128,6 @@ module.exports = React.createClass
       {airport_components}
       {route_components}
       <MoneyBalance players={[player1, player2]} />
-      <FunButtons planes={Plane.list} />
     </div>
 
 
