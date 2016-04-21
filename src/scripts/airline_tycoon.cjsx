@@ -29,6 +29,15 @@ planes = [
 planes_at = (location) ->
   plane for plane in planes when plane.location == location
 
+planes_for = (player) ->
+  plane for plane in planes when plane.owner == player
+
+player2_planes = ->
+  planes_for(player2)
+
+player1_planes = ->
+  planes_for(player1)
+
 # Duplicating name/key as you need unique keys, but can't do @props.key for name...
 airports = [
   {key: 'NYC', name: 'NYC', left: 330, top:  300, owner: player2, customers: 200 },
@@ -54,6 +63,21 @@ newCustomers = ->
 # Game Loop!
 setInterval newCustomers, 1000
 
+fly_to = (location, loc_planes) ->
+  plane.location = location for plane in loc_planes
+  MessageBus.publish 'dataChange'
+
+player1_goes_to_nyc = ->
+  fly_to('NYC', player1_planes())
+
+player1_goes_to_dub = ->
+  fly_to('DUB', player1_planes())
+
+player2_goes_to_nyc = ->
+  fly_to('NYC', player2_planes())
+
+player2_goes_to_dub = ->
+  fly_to('DUB', player2_planes())
 
 lets_all_go_to_nyc = ->
   plane.location = 'NYC' for plane in planes
@@ -90,6 +114,11 @@ module.exports = React.createClass
       <button onClick={lets_all_go_to_nyc}>Lets all go to NYC!</button>
       <button onClick={lets_all_go_to_dubai}>Lets all go to Dubai!</button>
       <button onClick={lets_all_be_in_the_air_to_london}>Lets all be flying to London!</button>
+      <button onClick={player1_goes_to_nyc}>Player1 to NYC!</button>
+      <button onClick={player1_goes_to_dub}>Player1 to DUB!</button>
+      <button onClick={player2_goes_to_nyc}>Player2 to NYC!</button>
+      <button onClick={player2_goes_to_dub}>Player2 to DUB!</button>
+
     </div>
 
 Airport = React.createClass
