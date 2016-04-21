@@ -6,9 +6,10 @@ PlaneList    = require '../components/plane_list'
 FunButtons   = require '../components/fun_buttons'
 MoneyBalance = require '../components/money_balance'
 LoyaltyList  = require '../components/loyalty_list'
+AlertOverlay  = require '../components/alert_overlay'
 
 require('./message_bus')
-{ Route, Airport, Plane, Loyalty } = require '../data'
+{ Route, Airport, Plane, Loyalty, Alert } = require '../data'
 
 pink = '#d5a6bd'
 blue = '#9fc5e8'
@@ -39,7 +40,6 @@ Loyalty.create [
   { location: 'DUB', amount: 0, owner: player2 }
 ]
 
-
 Game =
   landedHandler: (plane) ->
     console.log 'handling!'
@@ -68,6 +68,12 @@ Game =
     if owner.money >= 300
       # Buy more planes!
       buyPlane(owner)
+
+    # Alert.create(message: 'Congratulations! You are the ultimate Airline Tycoon!')
+    if Airport.where(owner: player2).length == 0
+      Alert.create(message: 'Congratulations! You are the ultimate Airline Tycoon!')
+    else if Airport.where(owner: player1).length == 0
+      Alert.create(message: 'Oops, it seems youve been out-tycooned!')
 
     MessageBus.publish 'dataChange'
 
@@ -128,6 +134,7 @@ module.exports = React.createClass
       {airport_components}
       {route_components}
       <MoneyBalance players={[player1, player2]} />
+      <AlertOverlay alerts={Alert.list} />
     </div>
 
 
