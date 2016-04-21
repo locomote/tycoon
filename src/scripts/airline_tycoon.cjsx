@@ -14,23 +14,13 @@ pink = '#d5a6bd'
 blue = '#9fc5e8'
 grey = '#eeeeee'
 
-player1 =
-  name: 'Blue'
-  color: blue
-  money: 0
+player1 = name: 'Blue',   color: blue, money: 0, hq: airports[2]
+player2 = name: 'Pink',   color: pink, money: 0, hq: airports[0]
+nobody =  name: 'Nobody', color: grey, money: 0, hq: airports[1]
 
-player2 =
-  name: 'Pink'
-  color: pink
-  money: 0
-
-nobody =
-  name: 'Nobody'
-  color: grey
-
-airports[0].owner = player2
-airports[1].owner = nobody
-airports[2].owner = player1
+player1.hq.owner = player1
+player2.hq.owner = player2
+nobody.hq.owner  = nobody
 
 planes = [
   {name: 'Plane1', flights_flown: 0, location: 'DUB', owner: player1},
@@ -40,6 +30,38 @@ planes = [
   {name: 'Plane5', flights_flown: 0, location: 'NYC', owner: player2},
   {name: 'Plane6', flights_flown: 0, location: 'NYC', owner: player2}
 ]
+
+
+
+Game =
+  landedHandler: (plane) ->
+    console.log 'handling!'
+
+    # Every flight increases our flown count
+    # @todo retire planes flown > 4
+    plane.flights_flown++
+
+    player = plane.owner
+    # Reward every landing
+    player.money += 100
+
+    if player.money >= 300
+      # Buy more planes!
+      buyPlane(player)
+
+    MessageBus.publish 'dataChange'
+
+# Game mechanics!
+MessageBus.subscribe(Game, 'landed', Game.landedHandler)
+
+newPlane = (owner) ->
+  rnd = Math.random().toString(36).replace(/[^0-9a-f]+/g, '').substr(0, 6)
+  name: "Plane-#{rnd}", flights_flown: 0, location: owner.hq.name, owner: owner
+
+buyPlane = (player) ->
+  planes.push(newPlane(player))
+  player.money -= 300
+  MessageBus.publish 'dataChange'
 
 planes_at = (location) ->
   plane for plane in planes when plane.location == location
@@ -75,8 +97,7 @@ landPlane = (plane) ->
   ->
     # @todo flight ordering on landing
     plane.location = plane.location.split('->')[1]
-    plane.flights_flown++
-    plane.owner.money += 100
+    MessageBus.publish 'landed', plane
     MessageBus.publish 'dataChange'
     console.log "landed in #{plane.location}!"
 
@@ -159,7 +180,7 @@ Route = React.createClass
     newPlanes = _.difference planes_at(@props.name), @planes
     if !_.isEmpty(newPlanes)
       for plane in newPlanes
-        setTimeout landPlane(plane), 3000 # @todo set according to distance between airports
+        setTimeout landPlane(plane), 1000 # @todo set according to distance between airports
 
       @planes = planes_at(@props.name)
 
