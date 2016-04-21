@@ -1,5 +1,11 @@
-Link = require('react-router').Link
+_            = require 'lodash'
+Link         = require('react-router').Link
+ReactDOM     = require 'react-dom'
+Flight       = require './flight'
+
 require('./message_bus')
+
+{ routes, airports } = require '../data'
 
 pink = '#d5a6bd'
 blue = '#9fc5e8'
@@ -29,6 +35,10 @@ planes = [
 planes_at = (location) ->
   plane for plane in planes when plane.location == location
 
+airports[0].owner = player2
+airports[1].owner = nobody
+airports[2].owner = player1
+
 planes_for = (player) ->
   plane for plane in planes when plane.owner == player
 
@@ -39,19 +49,19 @@ player1_planes = ->
   planes_for(player1)
 
 # Duplicating name/key as you need unique keys, but can't do @props.key for name...
-airports = [
-  {key: 'NYC', name: 'NYC', left: 330, top:  300, owner: player2, customers: 200 },
-  {key: 'LHR', name: 'LHR', left: 580, top:  250, owner: nobody, customers: 200 },
-  {key: 'DUB', name: 'DUB', left: 770, top:  380, owner: player1, customers: 200 }
-]
+# airports = [
+#   {key: 'NYC', name: 'NYC', left: 330, top:  300, owner: player2, customers: 200 },
+#   {key: 'LHR', name: 'LHR', left: 580, top:  250, owner: nobody, customers: 200 },
+#   {key: 'DUB', name: 'DUB', left: 770, top:  380, owner: player1, customers: 200 }
+# ]
 
 # Some "virtual" places flight can live when they're moving between airports
-routes = [
-  { key: 'NYC->LHR', name: 'NYC->LHR', start: 'NYC', end: 'LHR', x: 450, y: 240 },
-  { key: 'LHR->NYC', name: 'LHR->NYC', start: 'LHR', end: 'NYC', x: 472, y: 326 },
-  { key: 'LHR->DUB', name: 'LHR->DUB', start: 'LHR', end: 'DUB', x: 710, y: 280 },
-  { key: 'DUB->LHR', name: 'DUB->LHR', start: 'DUB', end: 'LHR', x: 660, y: 340 }
-]
+# routes = [
+#   { key: 'NYC->LHR', name: 'NYC->LHR', start: 'NYC', end: 'LHR', x: 450, y: 240 },
+#   { key: 'LHR->NYC', name: 'LHR->NYC', start: 'LHR', end: 'NYC', x: 472, y: 326 },
+#   { key: 'LHR->DUB', name: 'LHR->DUB', start: 'LHR', end: 'DUB', x: 710, y: 280 },
+#   { key: 'DUB->LHR', name: 'DUB->LHR', start: 'DUB', end: 'LHR', x: 660, y: 340 }
+# ]
 
 newCustomers = ->
   for airport in airports
@@ -78,6 +88,12 @@ player2_goes_to_nyc = ->
 
 player2_goes_to_dub = ->
   fly_to('DUB', player2_planes())
+
+fly_to = (locationCode) ->
+  plane          = _.first planes
+  route          = "#{ plane.location }->#{ locationCode }"
+  plane.location = route
+  ReactDOM.render(<Flight plane={plane} />, document.createElement "div")
 
 lets_all_go_to_nyc = ->
   plane.location = 'NYC' for plane in planes
@@ -108,12 +124,17 @@ module.exports = React.createClass
     route_components = (<Route {...props}/> for props in routes)
     airport_components = (<Airport {...airport}/> for airport in airports)
 
+    fly_to_nyc = fly_to.bind null, 'NYC'
+    fly_to_lhr = fly_to.bind null, 'LHR'
+
     <div id='map'>
       {airport_components}
       {route_components}
       <button onClick={lets_all_go_to_nyc}>Lets all go to NYC!</button>
       <button onClick={lets_all_go_to_dubai}>Lets all go to Dubai!</button>
       <button onClick={lets_all_be_in_the_air_to_london}>Lets all be flying to London!</button>
+      <button onClick={fly_to_nyc}>Lets animate to NYC!</button>
+      <button onClick={fly_to_lhr}>Lets animate to LHR!</button>
       <button onClick={player1_goes_to_nyc}>Player1 to NYC!</button>
       <button onClick={player1_goes_to_dub}>Player1 to DUB!</button>
       <button onClick={player2_goes_to_nyc}>Player2 to NYC!</button>
