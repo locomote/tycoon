@@ -58,26 +58,9 @@ newCustomers = ->
 # Game Loop!
 setInterval newCustomers, 1000
 
-fly_to = (location, loc_planes) ->
-  plane.location = location for plane in loc_planes
-  MessageBus.publish 'dataChange'
-
-player1_goes_to_nyc = ->
-  fly_to('NYC', player1_planes())
-
-player1_goes_to_dub = ->
-  fly_to('DUB', player1_planes())
-
-player2_goes_to_nyc = ->
-  fly_to('NYC', player2_planes())
-
-player2_goes_to_dub = ->
-  fly_to('DUB', player2_planes())
-
 fly_to = (locationCode) ->
   plane          = _.first planes
-  route          = "#{ plane.location }->#{ locationCode }"
-  plane.location = route
+  plane.enroute  = "#{ plane.location }->#{ locationCode }"
   ReactDOM.render(<Flight plane={plane} />, document.createElement "div")
 
 lets_all_go_to_nyc = ->
@@ -120,11 +103,6 @@ module.exports = React.createClass
       <button onClick={lets_all_be_in_the_air_to_london}>Lets all be flying to London!</button>
       <button onClick={fly_to_nyc}>Lets animate to NYC!</button>
       <button onClick={fly_to_lhr}>Lets animate to LHR!</button>
-      <button onClick={player1_goes_to_nyc}>Player1 to NYC!</button>
-      <button onClick={player1_goes_to_dub}>Player1 to DUB!</button>
-      <button onClick={player2_goes_to_nyc}>Player2 to NYC!</button>
-      <button onClick={player2_goes_to_dub}>Player2 to DUB!</button>
-
     </div>
 
 Airport = React.createClass

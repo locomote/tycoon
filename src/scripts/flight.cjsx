@@ -1,4 +1,5 @@
 _                  = require 'lodash'
+ReactDOM           = require 'react-dom'
 RenderInBody       = require './render_in_body'
 Calc               = require './calculator.coffee'
 {routes, airports} = require '../data'
@@ -8,7 +9,7 @@ FRAME_RATE = 60 #FPS
 Flight = React.createClass
   maxSpeed: 2
   route: ->
-    _.find routes, key: @props.plane.location
+    _.find routes, key: @props.plane.enroute
 
   locationCoordsFor: (locCode) ->
     loc = _.find airports, key: locCode
@@ -29,10 +30,18 @@ Flight = React.createClass
   isAt: ({ x, y }) ->
     Math.abs(@props.plane.x - x) < 1 and Math.abs(@props.plane.y - y) < 1
 
+  land: ->
+    # horrible - shoudl be in a model....
+    @props.plane.location = @route().end
+    delete @props.plane.enroute
+
+    parent = ReactDOM.findDOMNode(@).parentNode
+    ReactDOM.unmountComponentAtNode parent
+
   animate: ->
     target = @endCoords()
     {x, y} = @props.plane
-    return if @isAt( target )
+    return @land() if @isAt( target )
 
     maxStepDistance = @maxSpeed
     targetAngle     = Calc.angle(x, y, target.x, target.y) # angle
