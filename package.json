@@ -64,7 +64,6 @@
     "watch": "./node_modules/.bin/gulp watch",
     "build": "./node_modules/.bin/gulp build",
     "test": "jest",
-    "start": "gulp default"
-
+    "postinstall": "gulp default"
   }
 }
