@@ -8,24 +8,30 @@ player1 =
   name: 'Blue'
   color: blue
   planes: [
-    {name: 'Plane1', flights: 0, location: 'DUB'},
-    {name: 'Plane2', flights: 0, location: 'DUB'},
-    {name: 'Plane3', flights: 0, location: 'DUB'}
   ]
 
 player2 =
   color: pink
   name: 'Pink'
   planes: [
-    {name: 'Plane4', flights: 0, location: 'NYC'},
-    {name: 'Plane5', flights: 0, location: 'NYC'},
-    {name: 'Plane6', flights: 0, location: 'NYC'}
   ]
 
 nobody =
   color: grey
   name: 'Nobody'
   planes: []
+
+planes = [
+  {name: 'Plane1', flights: 0, location: 'DUB', owner: player1},
+  {name: 'Plane2', flights: 0, location: 'DUB', owner: player1},
+  {name: 'Plane3', flights: 0, location: 'DUB', owner: player1},
+  {name: 'Plane4', flights: 0, location: 'NYC', owner: player2},
+  {name: 'Plane5', flights: 0, location: 'NYC', owner: player2},
+  {name: 'Plane6', flights: 0, location: 'NYC', owner: player2}
+]
+
+planes_at = (location) ->
+  plane for plane in planes when plane.location == location
 
 # Duplicating name/key as you need unique keys, but can't do @props.key for name...
 airports = [
@@ -67,7 +73,7 @@ Airport = React.createClass
 
     <div className='airport' style={style}>
       <div style={marginTop: 20, width: 100}>{@props.name} - {@props.owner.name}</div>
-      <PlaneList planes={plane for plane in @props.owner.planes when plane.location == @props.name} />
+      <PlaneList planes={planes_at(@props.name)} />
     </div>
 
 Route = React.createClass
@@ -83,10 +89,11 @@ Route = React.createClass
 
     <div className='route' style={style}>
       <div style={marginTop: 20, width: 100}>{@props.name}</div>
+      <PlaneList planes={planes_at(@props.name)} />
     </div>
 
 PlaneList = React.createClass
   render: ->
-    planes = (<li key={plane.name}>{plane.name}</li> for plane in @props.planes)
+    plane_components = (<li key={plane.name}>{plane.name}</li> for plane in @props.planes)
 
-    <ul style={width: 200}>{planes}</ul>
+    <ul style={width: 200}>{plane_components}</ul>
