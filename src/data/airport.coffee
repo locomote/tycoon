@@ -5,10 +5,10 @@ class Airport extends Model
   @selected: ->
     _.find @list, selected: true
 
-  @deselectAll = ->
+  @deselectAll: ->
     airport.selected = false for airport in @list
 
-  @selectByKey = (airportCode) ->
+  @selectByKey: (airportCode) ->
     @deselectAll()
     airport.selected = true  for airport in @list when airport.name is airportCode
 

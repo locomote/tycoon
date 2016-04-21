@@ -2,7 +2,7 @@ _     = require 'lodash'
 Model = require './model.coffee'
 
 class Route extends Model
-  @test: ->
+
 
 Route.create [
   { key: 'NYC->LHR', name: 'NYC->LHR', start: 'NYC', end: 'LHR', x: 450, y: 240 },
