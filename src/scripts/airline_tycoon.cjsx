@@ -105,9 +105,9 @@ Airport = React.createClass
       left: @props.left
 
     <div className='airport' style={style}>
-      <div style={marginTop: 20, width: 100}>{@props.name} - {@props.owner.name}</div>
+      <div style={marginTop: 20, width: 100}><b>{@props.name} - {@props.owner.name}</b></div>
       <PlaneList planes={planes_at(@props.name)} />
-      <div>Customers: {@props.customers}</div>
+      <div><b>Customers: {@props.customers}</b></div>
     </div>
 
 Route = React.createClass
@@ -131,4 +131,4 @@ PlaneList = React.createClass
   render: ->
     plane_components = (<li key={plane.name}>{plane.name}</li> for plane in @props.planes)
 
-    <ul style={width: 200}>{plane_components}</ul>
+    <ul style={width: 200, color: 'blue' }>{plane_components}</ul>
