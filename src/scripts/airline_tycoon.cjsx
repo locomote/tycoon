@@ -7,19 +7,14 @@ grey = '#eeeeee'
 player1 =
   name: 'Blue'
   color: blue
-  planes: [
-  ]
 
 player2 =
-  color: pink
   name: 'Pink'
-  planes: [
-  ]
+  color: pink
 
 nobody =
-  color: grey
   name: 'Nobody'
-  planes: []
+  color: grey
 
 planes = [
   {name: 'Plane1', flights: 0, location: 'DUB', owner: player1},
@@ -62,6 +57,7 @@ module.exports = React.createClass
 
 Airport = React.createClass
   render: ->
+    # There are here cause it was quick and I'm lazy, but parts probably be better suited in CSS.
     style =
       backgroundColor: @props.owner.color
       border: '1px solid #000'
@@ -78,6 +74,7 @@ Airport = React.createClass
 
 Route = React.createClass
   render: ->
+    # There are here cause it was quick and I'm lazy, but parts probably be better suited in CSS.
     style =
       backgroundColor: '#ccc'
       border: '1px solid #000'
