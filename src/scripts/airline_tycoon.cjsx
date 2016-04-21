@@ -17,12 +17,12 @@ nobody =
   color: grey
 
 planes = [
-  {name: 'Plane1', flights: 0, location: 'DUB', owner: player1},
-  {name: 'Plane2', flights: 0, location: 'DUB', owner: player1},
-  {name: 'Plane3', flights: 0, location: 'DUB', owner: player1},
-  {name: 'Plane4', flights: 0, location: 'NYC', owner: player2},
-  {name: 'Plane5', flights: 0, location: 'NYC', owner: player2},
-  {name: 'Plane6', flights: 0, location: 'NYC', owner: player2}
+  {name: 'Plane1', flights_flown: 0, location: 'DUB', owner: player1},
+  {name: 'Plane2', flights_flown: 0, location: 'DUB', owner: player1},
+  {name: 'Plane3', flights_flown: 0, location: 'DUB', owner: player1},
+  {name: 'Plane4', flights_flown: 0, location: 'NYC', owner: player2},
+  {name: 'Plane5', flights_flown: 0, location: 'NYC', owner: player2},
+  {name: 'Plane6', flights_flown: 0, location: 'NYC', owner: player2}
 ]
 
 planes_at = (location) ->
@@ -35,7 +35,7 @@ airports = [
   {key: 'DUB', name: 'DUB', left: 770, top:  380, owner: player1 }
 ]
 
-# Some data structure to store flights as they move around...
+# Some "virtual" places flight can live when they're moving between airports
 routes = [
   { key: 'NYC->LHR', name: 'NYC->LHR', start: 'NYC', end: 'LHR', x: 450, y: 240 },
   { key: 'LHR->NYC', name: 'LHR->NYC', start: 'LHR', end: 'NYC', x: 472, y: 326 },
