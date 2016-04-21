@@ -46,7 +46,15 @@ routes = [
 
 lets_all_go_to_nyc = ->
   plane.location = 'NYC' for plane in planes
-  MessageBus.publish('dataChange', '')
+  MessageBus.publish 'dataChange'
+
+lets_all_go_to_dubai = ->
+  plane.location = 'DUB' for plane in planes
+  MessageBus.publish 'dataChange'
+
+lets_all_be_in_the_air_to_london = ->
+  plane.location = 'NYC->LHR' for plane in planes
+  MessageBus.publish 'dataChange'
 
 
 module.exports = React.createClass
@@ -61,7 +69,6 @@ module.exports = React.createClass
   componentWillUnmount: ->
     @unsubscribe('dataChange')
 
-
   render: ->
     route_components = (<Route {...props}/> for props in routes)
     airport_components = (<Airport {...airport}/> for airport in airports)
@@ -70,6 +77,8 @@ module.exports = React.createClass
       {airport_components}
       {route_components}
       <button onClick={lets_all_go_to_nyc}>Lets all go to NYC!</button>
+      <button onClick={lets_all_go_to_dubai}>Lets all go to Dubai!</button>
+      <button onClick={lets_all_be_in_the_air_to_london}>Lets all be flying to London!</button>
     </div>
 
 Airport = React.createClass
