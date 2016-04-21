@@ -1,4 +1,5 @@
 Link = require('react-router').Link
+require('./message_bus')
 
 pink = '#d5a6bd'
 blue = '#9fc5e8'
@@ -43,8 +44,23 @@ routes = [
   { key: 'DUB->LHR', name: 'DUB->LHR', start: 'DUB', end: 'LHR', x: 660, y: 340 }
 ]
 
+lets_all_go_to_nyc = ->
+  plane.location = 'NYC' for plane in planes
+  MessageBus.publish('dataChange', '')
+
+
 module.exports = React.createClass
   displayName: 'AirlineTycoon'
+  mixins: [MessageBusMixin]
+
+  componentDidMount: ->
+    # You should never, ever do this.
+    # But it sure is a convenient hack-day way to avoid implementing a store with callback hell!
+    @subscribe('dataChange', @forceUpdate)
+
+  componentWillUnmount: ->
+    @unsubscribe('dataChange')
+
 
   render: ->
     route_components = (<Route {...props}/> for props in routes)
@@ -53,6 +69,7 @@ module.exports = React.createClass
     <div id='map'>
       {airport_components}
       {route_components}
+      <button onClick={lets_all_go_to_nyc}>Lets all go to NYC!</button>
     </div>
 
 Airport = React.createClass
