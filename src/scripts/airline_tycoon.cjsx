@@ -53,15 +53,10 @@ Game =
 # Game mechanics!
 MessageBus.subscribe(Game, 'landed', Game.landedHandler)
 
-newPlane = (owner) ->
-  rnd = Math.random().toString(36).replace(/[^0-9a-f]+/g, '').substr(0, 6)
-  name: "Plane-#{rnd}", flights_flown: 0, location: owner.hq.name, owner: owner
-
 buyPlane = (player) ->
-  planes.push(newPlane(player))
+  Plane.createFor(owner)
   player.money -= 300
   MessageBus.publish 'dataChange'
-
 
 selectAirport = (airportCode) ->
   Airport.selectByKey airportCode
