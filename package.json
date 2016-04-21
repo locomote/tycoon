@@ -29,6 +29,7 @@
     "style-loader": "^0.12.3",
     "touch": "^1.0.0",
     "underscore": "^1.8.3",
+    "victor": "^1.1.0",
     "webpack": "^1.12.0",
     "webpack-dev-server": "^1.10.1"
   },

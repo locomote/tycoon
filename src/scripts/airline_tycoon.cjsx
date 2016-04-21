@@ -7,6 +7,7 @@ FunButtons   = require '../components/fun_buttons'
 MoneyBalance = require '../components/money_balance'
 LoyaltyList  = require '../components/loyalty_list'
 AlertOverlay  = require '../components/alert_overlay'
+VectorCalc   = require './vector_calc'
 
 require('./message_bus')
 { Route, Airport, Plane, Loyalty, Alert } = require '../data'
@@ -130,12 +131,38 @@ module.exports = React.createClass
     route_components = (<RouteMarker {...props}/> for props in Route.list )
     airport_components = (<AirportMarker {...airport}/> for airport in Airport.list )
 
+    lines = for route in Route.list
+      s = Airport.find(name: route.start)
+      e = Airport.find(name: route.end)
+      [ p1, p2, p3, p4 ] = VectorCalc.gentleBezier(s,e)
+      directions = "M#{p1.x} #{p1.y} C #{p3.x} #{p3.y}, #{p4.x} #{p4.y}, #{p2.x} #{p2.y}"
+
+      curve = <SVGPath key={route.key} d={directions} strokeWidth="2" stroke="#ccc" fill="transparent" strokeDasharray="10,10" />
+
+      line = (v, c) -> <SVGPath d="M0 0 #{v.x} #{v.y}" stroke={c} strokeWidth="3" />
+
+      [
+        curve,
+        # Enable these for debug!
+        # line(p1, 'red'),
+        # line(p2, 'blue'),
+        # line(p3, 'green'),
+        # line(p4, 'orange')
+      ]
+
     <div id='map'>
+      <SVGComponent height="700" width="1300">
+        {lines}
+      </SVGComponent>
       {airport_components}
       {route_components}
       <MoneyBalance players={[player1, player2]} />
       <AlertOverlay alerts={Alert.list} />
     </div>
+
+
+SVGComponent = React.createClass render: -> <svg {...this.props}>{this.props.children}</svg>
+SVGPath      = React.createClass render: -> <path {...this.props}>{this.props.children}</path>
 
 
 AirportMarker = React.createClass
@@ -156,13 +183,13 @@ AirportMarker = React.createClass
   render: ->
     style =
       backgroundColor: @props.owner.color
-      top: @props.top
-      left: @props.left
+      top: @props.y
+      left: @props.x
 
     if @props.selected
       _.extend style, border: '2px solid green'
 
-    <div className='airport locbox' style={style} onClick={@select}>
+    <div className='airport marker' style={style} onClick={@select}>
       <div style={marginTop: 20, width: 100}><b>{@props.name}</b></div>
       <PlaneList planes={Plane.at(@props.name)} />
       <div className='customers'>D:{@props.customers}</div>
@@ -196,7 +223,7 @@ RouteMarker = React.createClass
       left: @props.x
       top: @props.y
 
-    <div className='route locbox' style={style}>
+    <div className='route marker' style={style}>
       <div style={marginTop: 20, width: 100}>{@props.name}</div>
       <PlaneList planes={Plane.at(@props.name)} />
     </div>

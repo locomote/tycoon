@@ -13,9 +13,9 @@ class Airport extends Model
     airport.selected = true  for airport in @list when airport.name is airportCode
 
 Airport.create [
-  { key: 'NYC', name: 'NYC', left: 330, top:  300, customers: 200, selected: false },
-  { key: 'LHR', name: 'LHR', left: 580, top:  250, customers: 200, selected: false },
-  { key: 'DUB', name: 'DUB', left: 770, top:  380, customers: 200, selected: false }
+  { key: 'NYC', name: 'NYC', x: 330, y: 300, customers: 200, selected: false },
+  { key: 'LHR', name: 'LHR', x: 580, y: 250, customers: 200, selected: false },
+  { key: 'DUB', name: 'DUB', x: 770, y: 380, customers: 200, selected: false }
 ]
 
 module.exports = Airport
