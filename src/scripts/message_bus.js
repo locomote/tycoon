@@ -10,6 +10,10 @@ MessageBus = {
     if (Registry[channel]) {
       Registry[channel].forEach(function(subscriber) {
         subscriber[SUBSCRIPTIONS][channel].call(subscriber, data);
+
+        if(allEventsChannel = subscriber[SUBSCRIPTIONS]['*']){
+          allEventsChannel.call(subscriber, channel, data);
+        }
       });
     }
   },

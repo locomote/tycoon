@@ -1,17 +1,26 @@
 require './message_bus'
 _       = require 'lodash'
-Plane   = require '../data/plane'
-Airport = require '../data/airport'
-Loyalty = require '../data/loyalty'
-Player  = require '../data/player'
+{ Alert, Plane, Airport, Loyalty, Player} = require '../data'
+
+instance = null
 
 class Game
-  @start = ->
-    @instance ?= new Game
-    @instance
+  @instance = ->
+    if not instance
+      instance ?= new Game
+      instance.step()
+
+    instance
+
 
   constructor: ->
     MessageBus.subscribe( @, 'landed', @onPlaneLanded)
+    MessageBus.subscribe( @, '*', @step)
+
+  start: -> @step('start')
+
+  step: (args...) ->
+    player.step(args...) for player in Player.list or []
 
   selectAirport: (airportCode) ->
     Airport.selectByKey airportCode

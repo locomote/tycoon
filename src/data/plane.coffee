@@ -13,6 +13,9 @@ class Plane extends Model
     rnd = Math.random().toString(36).replace(/[^0-9a-f]+/g, '').substr(0, 6)
     Plane.create( name: "Plane-#{rnd}", flights_flown: 0, location: owner.hq.name, owner: owner )
 
+  isFlying: ->
+    _.includes @location, '->'
+
 Plane.create [
   {name: 'Plane1', flights_flown: 0, location: 'DUB', owner: Player.blue()},
   {name: 'Plane2', flights_flown: 0, location: 'DUB', owner: Player.blue()},

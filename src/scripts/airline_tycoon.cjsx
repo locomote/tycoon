@@ -9,7 +9,8 @@ LoyaltyList   = require '../components/loyalty_list'
 AlertOverlay  = require '../components/alert_overlay'
 VectorCalc    = require './vector_calc'
 PathAnimation = require './path_animation'
-Game          = require './game'
+Brain         = require './brain'
+Game          = require('./game').instance()
 { Route, Airport, Plane, Loyalty, Alert, Player } = require '../data'
 
 require('./message_bus')
@@ -18,6 +19,9 @@ Player.pink().claimLocation Airport.find(name: 'NYC')
 Player.none().claimLocation Airport.find(name: 'LHR')
 Player.blue().claimLocation Airport.find(name: 'DUB')
 
+# assign ai to NPC's
+# TODO: create a button to toggle Brain for player(s)
+Player.pink().implant new Brain
 Game.start()
 
 module.exports = React.createClass
@@ -74,12 +78,12 @@ AirportMarker = React.createClass
     if selection = Airport.selected()
       if selection.name != @props.name
         console.log "Flying #{selection.name}->#{@props.name}"
-        Game.instance.scheduleFlight selection.name, @props.name
+        Game.scheduleFlight selection.name, @props.name
 
-      Game.instance.deselectAirports()
+      Game.deselectAirports()
       console.log('deselected')
     else
-      Game.instance.selectAirport @props.name
+      Game.selectAirport @props.name
       console.log('selected')
 
   render: ->
@@ -119,7 +123,7 @@ RouteMarker = React.createClass
 
   done: (plane) ->
     ->
-      Game.instance.landPlane(plane)
+      Game.landPlane(plane)
 
   render: ->
     animations = for plane in @planes

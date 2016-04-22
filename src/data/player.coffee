@@ -16,9 +16,16 @@ class Player extends Model
   @none = ->
     @find(name: 'None')
 
+  step: (args...) ->
+    @brain?.nextMove args...
+
   claimLocation: (location) ->
     @hq       = location
     @hq.owner = @
+
+  implant: (brain) ->
+    @brain       = brain
+    @brain.owner = @
 
 Player.create [
   { name: 'Blue', color: blue, money: 0 }
