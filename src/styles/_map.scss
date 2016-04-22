@@ -33,6 +33,13 @@ ul li {
   width: 20px;
   position: absolute;
   border-radius: 20px;
+
+  &.flight {
+    background-image: url(/images/plane.png);
+    background-repeat: no-repeat;
+    background-position: top left;
+  }
+
 }
 
 .route {

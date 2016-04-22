@@ -128,7 +128,7 @@ RouteMarker = React.createClass
 
   render: ->
     animations = for plane in @planes
-      <PathAnimation key={plane.name} node={"path-#{plane.location}"} onDone={@done(plane)} />
+      <PathAnimation key={plane.name} player={plane.owner} node={"path-#{plane.location}"} onDone={@done(plane)} />
 
     <div>{animations}</div>
 

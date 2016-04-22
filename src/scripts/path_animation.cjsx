@@ -1,4 +1,5 @@
 _ = require 'lodash'
+Calc = require './calculator'
 
 # Render an animation that follows a given SVG path
 # Thanks to the handy native getTotalLength and getPointAtLength methods that exist on <path> elements!
@@ -32,7 +33,21 @@ module.exports = PathAnimation = React.createClass
     @setState animating: false
     @props.onDone()
 
+  angle: ->
+    svg_path = document.getElementById(@props.node)
+    return @_last if _.isNull svg_path
+
+    point  = svg_path.getPointAtLength svg_path.getTotalLength()
+
+    @_last = Calc.normalizeAngle( Calc.angle @state.x, @state.y, point.x, point.y )
+
   render: ->
-    marker = <div className='marker' style={left: @state.x, top: @state.y}></div>
+    style =
+      left        : @state.x
+      top         : @state.y
+      transform   : "rotate(#{ @angle() }deg)"
+      borderColor : "#{@props.player.color}"
+
+    marker = <div className='marker flight' style={style}></div>
 
     if @state.animating then marker else <div/>

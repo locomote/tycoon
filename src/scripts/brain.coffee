@@ -16,9 +16,13 @@ class Brain
     @movePlane()
 
   movePlane: ->
-    return unless plane   = _.sample @myStationaryPlanes()
-    return unless airport = @bestDestinationFor plane
+    tryInABit = =>
+      @timeout = setTimeout @movePlane.bind( @ )
 
+    return tryInABit() unless plane   = _.sample @myStationaryPlanes()
+    return tryInABit() unless airport = @bestDestinationFor plane
+
+    clearTimeout @timeout if @timeout
     plane.location = "#{plane.location}->#{airport.name}"
     MessageBus.publish 'dataChange'
 
