@@ -17,9 +17,9 @@ class Plane extends Model
     _.includes @location, '->'
 
 Plane.create [
-  {name: 'Plane1', flights_flown: 0, location: 'DUB', owner: Player.blue()},
-  {name: 'Plane2', flights_flown: 0, location: 'DUB', owner: Player.blue()},
-  {name: 'Plane3', flights_flown: 0, location: 'DUB', owner: Player.blue()},
+  {name: 'Plane1', flights_flown: 0, location: 'MEL', owner: Player.blue()},
+  {name: 'Plane2', flights_flown: 0, location: 'MEL', owner: Player.blue()},
+  {name: 'Plane3', flights_flown: 0, location: 'MEL', owner: Player.blue()},
   {name: 'Plane4', flights_flown: 0, location: 'NYC', owner: Player.pink()},
   {name: 'Plane5', flights_flown: 0, location: 'NYC', owner: Player.pink()},
   {name: 'Plane6', flights_flown: 0, location: 'NYC', owner: Player.pink()}

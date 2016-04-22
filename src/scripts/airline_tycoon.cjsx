@@ -16,9 +16,9 @@ Game          = require('./game').instance()
 require('./message_bus')
 
 Player.pink().setHQ Airport.find(name: 'NYC')
-Player.none().setHQ Airport.find(name: 'LHR')
-Player.none().setHQ Airport.find(name: 'MEL')
-Player.blue().setHQ Airport.find(name: 'DUB')
+# Player.none().setHQ Airport.find(name: 'LHR')
+# Player.none().setHQ Airport.find(name: 'MEL')
+Player.blue().setHQ Airport.find(name: 'MEL')
 
 # assign ai to NPC's
 # TODO: create a button to toggle Brain for player(s)
