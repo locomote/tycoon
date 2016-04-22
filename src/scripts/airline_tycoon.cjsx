@@ -9,20 +9,17 @@ LoyaltyList   = require '../components/loyalty_list'
 AlertOverlay  = require '../components/alert_overlay'
 RouteLines    = require '../components/route_lines'
 PathAnimation = require './path_animation'
-Brain         = require './brain'
+LocoBrain     = require './loco_brain'
+ApiBrain      = require './api_brain'
 Game          = require('./game').instance()
+
 { Route, Airport, Plane, Loyalty, Alert, Player } = require '../data'
 
 require('./message_bus')
 
 Player.pink().setHQ Airport.find(name: 'NYC')
-# Player.none().setHQ Airport.find(name: 'LHR')
-# Player.none().setHQ Airport.find(name: 'MEL')
 Player.blue().setHQ Airport.find(name: 'MEL')
 
-# assign ai to NPC's
-# TODO: create a button to toggle Brain for player(s)
-# Player.pink().implant new Brain
 Game.start()
 
 module.exports = React.createClass
@@ -113,7 +110,7 @@ Brains = React.createClass
       state[ player.name ] = false
 
     else
-      player.implant( brain = new Brain )
+      player.implant( brain = new LocoBrain ) # change to an ApiBrain if u like!
       state[ player.name ] = true
 
     @setState( state )

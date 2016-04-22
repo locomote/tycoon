@@ -93,4 +93,9 @@ class Game
 
     MessageBus.publish 'dataChange'
 
+  # TODO: formalize the Game state JSON, which will be posted to
+  # an API endpoint via used ApiBrains
+  toJSON: ->
+    {}
+
 module.exports = Game

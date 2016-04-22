@@ -28,4 +28,5 @@ Plane.create [
   {name: 'Plane6', flights_flown: 0, location: 'NYC', owner: Player.pink()}
 ]
 
+window.Plane = Plane
 module.exports = Plane
