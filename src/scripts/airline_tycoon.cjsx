@@ -21,7 +21,7 @@ Player.blue().claimLocation Airport.find(name: 'DUB')
 
 # assign ai to NPC's
 # TODO: create a button to toggle Brain for player(s)
-Player.pink().implant new Brain
+# Player.pink().implant new Brain
 Game.start()
 
 module.exports = React.createClass
@@ -63,6 +63,7 @@ module.exports = React.createClass
       {airport_components}
       {route_components}
       <MoneyBalance players={[Player.blue(), Player.pink()]} />
+      <Brains players={[Player.blue(), Player.pink()]} />
       <AlertOverlay alerts={Alert.list} />
     </div>
 
@@ -130,4 +131,59 @@ RouteMarker = React.createClass
       <PathAnimation key={plane.name} node={"path-#{plane.location}"} onDone={@done(plane)} />
 
     <div>{animations}</div>
+
+
+Brains = React.createClass
+  mixins: [MessageBusMixin]
+
+  getInitialState: ->
+    state = {}
+    _.each @props.players, (player) -> state[ player.name ] = false
+    state
+
+  onClick: (player) ->
+    state = @state
+
+    if player.brain
+      delete player.brain
+      state[ player.name ] = false
+
+    else
+      player.implant( brain = new Brain )
+      brain.nextMove()
+      state[ player.name ] = true
+
+    @setState( state )
+
+  render: ->
+    btns = (
+      _.map @props.players, (player) =>
+        onClick     = @onClick.bind(@, player)
+
+        borderColor =
+
+        btnStyle =
+          cursor: 'pointer'
+          borderRadius: '40px'
+          border: "2px solid black"
+          backgroundColor: player.color
+          margin: "10px"
+          boxShadow: "2px 2px 10px rgba(0,0,0,0.35)"
+
+        if @state[ player.name ]
+          _.extend btnStyle,
+            border: "2px solid green"
+            boxShadow: "none"
+
+        <div style={ btnStyle } onClick={ onClick }>
+          <img src="./images/brain.png" style={{margin: "10px 10px 0 10px"}} />
+        </div>
+    )
+
+    style =
+      position: 'fixed'
+      top: '0px'
+      right: '0px'
+
+    <div style={style}>{btns}</div>
 

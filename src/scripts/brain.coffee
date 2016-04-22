@@ -6,9 +6,10 @@ class Brain
   constructor: (@owner) ->
 
   nextMove: (gameEvent, eventData) ->
-    switch gameEvent
-      when 'start' then @movePlane()
-      else @movePlane()
+    # if we wanted to we could determine where to move based on
+    # the gamEvent being raised - for now - we will just movePlanes
+    # on all events
+    @movePlane()
 
   movePlane: ->
     return unless plane   = _.sample @myStationaryPlanes()
