@@ -16,6 +16,9 @@ class Player extends Model
   @none = ->
     @find(name: 'None')
 
+  @active = ->
+    _.without @list, @none()
+
   step: (args...) ->
     @brain?.nextMove args...
 

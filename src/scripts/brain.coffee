@@ -13,13 +13,14 @@ class Brain
     # if we wanted to we could determine where to move based on
     # the gamEvent being raised - for now - we will just movePlanes
     # on all events
-    @movePlane()
+    @movePlanes()
 
-  movePlane: ->
-    return unless plane   = _.sample @myStationaryPlanes()
-    return unless airport = @bestDestinationFor plane
+  movePlanes: ->
+    return if _.isEmpty( planes = @myStationaryPlanes() )
+    for plane in planes
+      continue unless airport = @bestDestinationFor plane
+      plane.location = "#{plane.location}->#{airport.name}"
 
-    plane.location = "#{plane.location}->#{airport.name}"
     MessageBus.publish 'dataChange'
 
   bestDestinationFor: (plane) ->

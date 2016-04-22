@@ -125,7 +125,6 @@ Brains = React.createClass
 
     else
       player.implant( brain = new Brain )
-      brain.nextMove()
       state[ player.name ] = true
 
     @setState( state )

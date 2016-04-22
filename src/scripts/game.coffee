@@ -16,10 +16,16 @@ class Game
     MessageBus.subscribe( @, 'landed', @onPlaneLanded)
     MessageBus.subscribe( @, '*', @step)
 
-  start: -> @step('start')
+  start: ->
+    @step()
 
-  step: (args...) ->
-    player.step(args...) for player in Player.list or []
+  step: (idx = 0) ->
+    if Plane.areAllLanded()
+      Player.active()[ idx ]?.step()
+      idx += 1
+      idx  = 0 if idx % Player.active().length is 0
+
+    requestAnimationFrame @step.bind(@, idx)
 
   selectAirport: (airportCode) ->
     Airport.selectByKey airportCode
