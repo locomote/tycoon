@@ -9,14 +9,18 @@ Game = require('./game').instance()
 class Brain
   constructor: (@owner) ->
 
-  nextMove: (gameEvent, eventData) ->
+  # why cb?... when we extend Brain to hook up an API - it will allow us to wait
+  # for the http response... this is just the interface
+  nextMove: (cb = ->) ->
     # if we wanted to we could determine where to move based on
-    # the gamEvent being raised - for now - we will just movePlanes
+    # the gameEvent being raised - for now - we will just movePlanes
     # on all events
     @movePlanes()
+    cb()
 
   movePlanes: ->
     return if _.isEmpty( planes = @myStationaryPlanes() )
+
     for plane in planes
       continue unless airport = @bestDestinationFor plane
       plane.location = "#{plane.location}->#{airport.name}"

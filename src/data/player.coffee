@@ -19,8 +19,9 @@ class Player extends Model
   @active = ->
     _.without @list, @none()
 
-  step: (args...) ->
-    @brain?.nextMove args...
+  step: (cb = ->) ->
+    return cb() unless @brain
+    @brain.nextMove cb
 
   setHQ: (location) ->
     @hq = @claimLocation location

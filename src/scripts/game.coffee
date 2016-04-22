@@ -12,20 +12,20 @@ class Game
 
     instance
 
-  constructor: ->
-    MessageBus.subscribe( @, 'landed', @onPlaneLanded)
-    MessageBus.subscribe( @, '*', @step)
-
   start: ->
     @step()
 
   step: (idx = 0) ->
-    if Plane.areAllLanded()
-      Player.active()[ idx ]?.step()
-      idx += 1
-      idx  = 0 if idx % Player.active().length is 0
+    next = =>
+      requestAnimationFrame @step.bind(@, idx)
 
-    requestAnimationFrame @step.bind(@, idx)
+    return next() unless Plane.areAllLanded()
+    return next() unless player = Player.active()[ idx ]
+
+    idx += 1
+    idx  = 0 if idx % Player.active().length is 0
+
+    player.step next
 
   selectAirport: (airportCode) ->
     Airport.selectByKey airportCode
@@ -45,18 +45,18 @@ class Game
 
   landPlane: (plane) ->
     # @todo flight ordering on landing
+    return unless plane.isFlying()
+
     plane.location = plane.location.split('->')[1]
-    MessageBus.publish 'landed', plane
+    @processRewardsFor plane
     MessageBus.publish 'dataChange'
-    console.log "landed in #{plane.location}!"
 
   buyPlane: (player) ->
     Plane.createFor( player )
     player.money -= 300
     MessageBus.publish 'dataChange'
 
-  onPlaneLanded: (plane) =>
-    console.log 'handling!'
+  processRewardsFor: (plane) =>
 
     # Every flight increases our flown count
     # @todo retire planes flown > 4
