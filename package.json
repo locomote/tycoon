@@ -1,9 +1,9 @@
 {
-  "name": "coffee-react-quickstart",
-  "description": "Quickstart for creating React.js web applications",
+  "name": "tycoon",
+  "description": "Expand your Airline to be the ultimate Tycoon!",
   "version": "0.0.1",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
-  "bugs": "https://github.com/KyleAMathews/coffee-react-quickstart/issues",
+  "author": "Locomote (Various) <support@locomote.com>",
+  "bugs": "https://github.com/locomote/tycoon/issues",
   "dependencies": {
     "cjsx-loader": "^2.0.1",
     "coffee-loader": "^0.7.2",
@@ -33,7 +33,7 @@
     "webpack": "^1.12.0",
     "webpack-dev-server": "^1.10.1"
   },
-  "homepage": "https://github.com/KyleAMathews/coffee-react-quickstart",
+  "homepage": "https://github.com/locomote/tycoon",
   "jest": {
     "scriptPreprocessor": "<rootDir>/preprocessor.js",
     "unmockedModulePathPatterns": [
@@ -60,7 +60,7 @@
   ],
   "license": "MIT",
   "main": "server.coffee",
-  "repository": "git@github.com:KyleAMathews/coffee-react-quickstart.git",
+  "repository": "git@github.com:locomote/tycoon.git",
   "scripts": {
     "start": "./node_modules/.bin/gulp watch",
     "build": "./node_modules/.bin/gulp build",
