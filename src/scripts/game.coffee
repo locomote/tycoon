@@ -12,7 +12,6 @@ class Game
 
     instance
 
-
   constructor: ->
     MessageBus.subscribe( @, 'landed', @onPlaneLanded)
     MessageBus.subscribe( @, '*', @step)
@@ -68,7 +67,7 @@ class Game
 
       # Airport becomes ours once loyalty reaches 100%
       if loyalty.amount >= 100
-        airport.owner = owner
+        owner.claimLocation airport
 
         # It's a big marketing win, all other loyalties take a hit!
         loyalty.amount = 0 for loyalty in Loyalty.where(location: airport.name)

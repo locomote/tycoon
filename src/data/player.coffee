@@ -19,9 +19,12 @@ class Player extends Model
   step: (args...) ->
     @brain?.nextMove args...
 
+  setHQ: (location) ->
+    @hq = @claimLocation location
+
   claimLocation: (location) ->
-    @hq       = location
-    @hq.owner = @
+    location.owner = @
+    location
 
   implant: (brain) ->
     @brain       = brain

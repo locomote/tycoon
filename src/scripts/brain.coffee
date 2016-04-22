@@ -2,6 +2,10 @@ _    = require 'lodash'
 Game = require('./game').instance()
 { Plane, Route, Player, Loyalty, Airport } = require '../data'
 
+# This would be were we can integrate an api - i.e. send a post to an applicants
+# API with a JSON doc defining game state (i.e. locations, planes, player assets)
+# and their api would decide what to do next and send back cmds... For now - Ill
+# just code in the client side
 class Brain
   constructor: (@owner) ->
 
@@ -14,15 +18,16 @@ class Brain
   movePlane: ->
     return unless plane   = _.sample @myStationaryPlanes()
     return unless airport = @bestDestinationFor plane
+
     plane.location = "#{plane.location}->#{airport.name}"
     MessageBus.publish 'dataChange'
 
   bestDestinationFor: (plane) ->
-    flyableAirportIn = (list) ->
-      airports = _.filter list, (airport) -> airport.location isnt plane.location
+    reachableAirportIn = (list) ->
+      airports = _.filter list, (airport) -> airport.key isnt plane.location
       _.sample airports
 
-    flyableAirportIn( @otherAirports() ) or flyableAirportIn( @myAirports() )
+    reachableAirportIn( @otherAirports() ) or reachableAirportIn( @myAirports() )
 
   # airports
   myAirports    : -> @my Airport
