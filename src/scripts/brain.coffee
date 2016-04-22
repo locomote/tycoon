@@ -16,19 +16,18 @@ class Brain
     @movePlane()
 
   movePlane: ->
-    tryInABit = =>
-      @timeout = setTimeout @movePlane.bind( @ )
+    return unless plane   = _.sample @myStationaryPlanes()
+    return unless airport = @bestDestinationFor plane
 
-    return tryInABit() unless plane   = _.sample @myStationaryPlanes()
-    return tryInABit() unless airport = @bestDestinationFor plane
-
-    clearTimeout @timeout if @timeout
     plane.location = "#{plane.location}->#{airport.name}"
     MessageBus.publish 'dataChange'
 
   bestDestinationFor: (plane) ->
     reachableAirportIn = (list) ->
-      airports = _.filter list, (airport) -> airport.key isnt plane.location
+      airports = _.filter list, (airport) ->
+        routeKey = "#{plane.location}->#{airport.key}"
+        !!Route.find(key: routeKey)
+
       _.sample airports
 
     reachableAirportIn( @otherAirports() ) or reachableAirportIn( @myAirports() )
