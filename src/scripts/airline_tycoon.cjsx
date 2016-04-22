@@ -17,6 +17,7 @@ require('./message_bus')
 
 Player.pink().setHQ Airport.find(name: 'NYC')
 Player.none().setHQ Airport.find(name: 'LHR')
+Player.none().setHQ Airport.find(name: 'MEL')
 Player.blue().setHQ Airport.find(name: 'DUB')
 
 # assign ai to NPC's
