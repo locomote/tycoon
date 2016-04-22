@@ -9,114 +9,16 @@ LoyaltyList   = require '../components/loyalty_list'
 AlertOverlay  = require '../components/alert_overlay'
 VectorCalc    = require './vector_calc'
 PathAnimation = require './path_animation'
+Game          = require './game'
+{ Route, Airport, Plane, Loyalty, Alert, Player } = require '../data'
 
 require('./message_bus')
-{ Route, Airport, Plane, Loyalty, Alert } = require '../data'
 
-pink = '#d5a6bd'
-blue = '#9fc5e8'
-grey = '#eeeeee'
+Player.pink().claimLocation Airport.find(name: 'NYC')
+Player.none().claimLocation Airport.find(name: 'LHR')
+Player.blue().claimLocation Airport.find(name: 'DUB')
 
-player1 = name: 'Blue',   color: blue, money: 0, hq: Airport.list[2]
-player2 = name: 'Pink',   color: pink, money: 0, hq: Airport.list[0]
-nobody  =  name: 'Nobody', color: grey, money: 0, hq: Airport.list[1]
-
-player1.hq.owner = player1
-player2.hq.owner = player2
-nobody.hq.owner  = nobody
-# static data setup
-Plane.create [
-  {name: 'Plane1', flights_flown: 0, location: 'DUB', owner: player1},
-  {name: 'Plane2', flights_flown: 0, location: 'DUB', owner: player1},
-  {name: 'Plane3', flights_flown: 0, location: 'DUB', owner: player1},
-  {name: 'Plane4', flights_flown: 0, location: 'NYC', owner: player2},
-  {name: 'Plane5', flights_flown: 0, location: 'NYC', owner: player2},
-  {name: 'Plane6', flights_flown: 0, location: 'NYC', owner: player2}
-]
-Loyalty.create [
-  { location: 'NYC', amount: 0, owner: player1 },
-  { location: 'LHR', amount: 0, owner: player1 },
-  { location: 'DUB', amount: 0, owner: player1 },
-  { location: 'NYC', amount: 0, owner: player2 },
-  { location: 'LHR', amount: 0, owner: player2 },
-  { location: 'DUB', amount: 0, owner: player2 }
-]
-
-Game =
-  landedHandler: (plane) ->
-    console.log 'handling!'
-
-    # Every flight increases our flown count
-    # @todo retire planes flown > 4
-    plane.flights_flown++
-
-    # Reward every landing
-    owner = plane.owner
-    owner.money += 100
-
-    # Loyalty increases when Airport is not ours
-    loyalty = Loyalty.find(location: plane.location, owner: owner)
-    airport = Airport.find(name: plane.location)
-    if airport.owner != owner
-      loyalty.amount += 20
-
-      # Airport becomes ours once loyalty reaches 100%
-      if loyalty.amount >= 100
-        airport.owner = owner
-
-        # It's a big marketing win, all other loyalties take a hit!
-        loyalty.amount = 0 for loyalty in Loyalty.where(location: airport.name)
-
-    if owner.money >= 300
-      # Buy more planes!
-      buyPlane(owner)
-
-    # Alert.create(message: 'Congratulations! You are the ultimate Airline Tycoon!')
-    if Airport.where(owner: player2).length == 0
-      Alert.create(message: 'Congratulations! You are the ultimate Airline Tycoon!')
-    else if Airport.where(owner: player1).length == 0
-      Alert.create(message: 'Oops, it seems youve been out-tycooned!')
-
-    MessageBus.publish 'dataChange'
-
-# Game mechanics!
-MessageBus.subscribe(Game, 'landed', Game.landedHandler)
-
-buyPlane = (player) ->
-  Plane.createFor(player)
-  player.money -= 300
-  MessageBus.publish 'dataChange'
-
-selectAirport = (airportCode) ->
-  Airport.selectByKey airportCode
-  MessageBus.publish 'dataChange'
-
-deselectAirports = (airportCode) ->
-  Airport.deselectAll()
-  MessageBus.publish 'dataChange'
-
-scheduleFlight = (startAirportCode, endAirportCode) ->
-  # @todo only send our own planes
-  plane = _.first (Plane.at startAirportCode)
-  plane.location = "#{startAirportCode}->#{endAirportCode}"
-  MessageBus.publish 'dataChange'
-
-landPlane = (plane) ->
-  # @todo flight ordering on landing
-  plane.location = plane.location.split('->')[1]
-  MessageBus.publish 'landed', plane
-  MessageBus.publish 'dataChange'
-  console.log "landed in #{plane.location}!"
-
-newCustomers = ->
-  for airport in Airport.list
-    # Terminals with planes gain 50 passengers each second
-    if Plane.at(airport.name).length != 0
-      airport.customers += 50 if airport.customers < 1000
-      MessageBus.publish 'dataChange'
-
-# Game Loop!
-requestAnimationFrame newCustomers
+Game.start()
 
 module.exports = React.createClass
   displayName: 'AirlineTycoon'
@@ -156,7 +58,7 @@ module.exports = React.createClass
       </SVGComponent>
       {airport_components}
       {route_components}
-      <MoneyBalance players={[player1, player2]} />
+      <MoneyBalance players={[Player.blue(), Player.pink()]} />
       <AlertOverlay alerts={Alert.list} />
     </div>
 
@@ -172,12 +74,12 @@ AirportMarker = React.createClass
     if selection = Airport.selected()
       if selection.name != @props.name
         console.log "Flying #{selection.name}->#{@props.name}"
-        scheduleFlight selection.name, @props.name
+        Game.instance.scheduleFlight selection.name, @props.name
 
-      deselectAirports()
+      Game.instance.deselectAirports()
       console.log('deselected')
     else
-      selectAirport @props.name
+      Game.instance.selectAirport @props.name
       console.log('selected')
 
   render: ->
@@ -217,7 +119,7 @@ RouteMarker = React.createClass
 
   done: (plane) ->
     ->
-      landPlane(plane)
+      Game.instance.landPlane(plane)
 
   render: ->
     animations = for plane in @planes

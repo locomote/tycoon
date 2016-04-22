@@ -1,5 +1,4 @@
 class Model
-
   @create: (attrs) ->
     new this(props) for props in _.flatten( [ attrs ] )
 

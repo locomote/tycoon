@@ -4,3 +4,4 @@ module.exports =
   Plane   : require './plane.coffee'
   Loyalty : require './loyalty.coffee'
   Alert   : require './alert.coffee'
+  Player  : require './player.coffee'

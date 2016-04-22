@@ -1,7 +1,7 @@
 _                  = require 'lodash'
 ReactDOM           = require 'react-dom'
 RenderInBody       = require './render_in_body'
-Calc               = require './calculator.coffee'
+Calc               = require './calculator'
 require('./message_bus')
 {routes, airports} = require '../data'
 
