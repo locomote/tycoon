@@ -1,6 +1,6 @@
 require './message_bus'
 _       = require 'lodash'
-{ Alert, Plane, Airport, Loyalty, Player} = require '../data'
+{ Alert, Plane, Airport, Loyalty, Player, Route } = require '../data'
 
 instance = null
 
@@ -32,7 +32,9 @@ class Game
   scheduleFlight: (startAirportCode, endAirportCode) ->
     # @todo only send our own planes
     plane = _.first (Plane.at startAirportCode)
-    plane.location = "#{startAirportCode}->#{endAirportCode}"
+    routeKey = "#{startAirportCode}->#{endAirportCode}"
+    return unless Route.find(key: routeKey)
+    plane.location = routeKey
     MessageBus.publish 'dataChange'
 
   landPlane: (plane) ->
