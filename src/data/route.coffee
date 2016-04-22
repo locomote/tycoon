@@ -13,6 +13,8 @@ Route.create [
   { key: 'NYC->DUB', name: 'NYC->DUB', start: 'NYC', end: 'DUB', x: 573, y: 444 },
   { key: 'DUB->MEL', name: 'DUB->MEL', start: 'DUB', end: 'MEL', x: 573, y: 444 },
   { key: 'MEL->DUB', name: 'MEL->DUB', start: 'MEL', end: 'DUB', x: 873, y: 744 },
+  { key: 'MEL->PEK', name: 'MEL->PEK', start: 'MEL', end: 'PEK', x: 873, y: 744 },
+  { key: 'PEK->MEL', name: 'PEK->MEL', start: 'PEK', end: 'MEL', x: 873, y: 744 },
 ]
 
 module.exports = Route

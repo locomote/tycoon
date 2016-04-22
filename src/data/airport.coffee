@@ -16,7 +16,8 @@ Airport.create [
   { key: 'NYC', name: 'NYC', x: 330, y: 300, customers: 200, selected: false },
   { key: 'LHR', name: 'LHR', x: 580, y: 250, customers: 200, selected: false },
   { key: 'DUB', name: 'DUB', x: 770, y: 380, customers: 200, selected: false },
-  { key: 'MEL', name: 'MEL', x: 1080, y: 575, customers: 200, selected: false }
+  { key: 'MEL', name: 'MEL', x: 1080, y: 575, customers: 200, selected: false },
+  { key: 'PEK', name: 'PEK', x: 975, y: 295, customers: 200, selected: false },
 ]
 
 module.exports = Airport

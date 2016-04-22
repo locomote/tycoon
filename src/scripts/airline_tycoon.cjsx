@@ -90,7 +90,7 @@ AirportMarker = React.createClass
 
   render: ->
     style =
-      backgroundColor: @props.owner.color
+      backgroundColor: (@props.owner or Player.none()).color
       top: @props.y
       left: @props.x
 
