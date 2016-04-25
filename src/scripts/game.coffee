@@ -12,14 +12,20 @@ class Game
 
     instance
 
-  constructor: ->
-    MessageBus.subscribe( @, 'landed', @onPlaneLanded)
-    MessageBus.subscribe( @, '*', @step)
+  start: ->
+    @step()
 
-  start: -> @step('start')
+  step: (idx = 0) ->
+    next = =>
+      requestAnimationFrame @step.bind(@, idx)
 
-  step: (args...) ->
-    player.step(args...) for player in Player.list or []
+    return next() unless Plane.areAllLanded()
+    return next() unless player = Player.active()[ idx ]
+
+    idx += 1
+    idx  = 0 if idx % Player.active().length is 0
+
+    player.step next
 
   selectAirport: (airportCode) ->
     Airport.selectByKey airportCode
@@ -39,18 +45,18 @@ class Game
 
   landPlane: (plane) ->
     # @todo flight ordering on landing
+    return unless plane.isFlying()
+
     plane.location = plane.location.split('->')[1]
-    MessageBus.publish 'landed', plane
+    @processRewardsFor plane
     MessageBus.publish 'dataChange'
-    console.log "landed in #{plane.location}!"
 
   buyPlane: (player) ->
     Plane.createFor( player )
     player.money -= 300
     MessageBus.publish 'dataChange'
 
-  onPlaneLanded: (plane) =>
-    console.log 'handling!'
+  processRewardsFor: (plane) =>
 
     # Every flight increases our flown count
     # @todo retire planes flown > 4
@@ -86,5 +92,10 @@ class Game
       Alert.create(message: 'Oops, it seems youve been out-tycooned!')
 
     MessageBus.publish 'dataChange'
+
+  # TODO: formalize the Game state JSON, which will be posted to
+  # an API endpoint via used ApiBrains
+  toJSON: ->
+    {}
 
 module.exports = Game

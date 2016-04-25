@@ -16,8 +16,12 @@ class Player extends Model
   @none = ->
     @find(name: 'None')
 
-  step: (args...) ->
-    @brain?.nextMove args...
+  @active = ->
+    _.without @list, @none()
+
+  step: (cb = ->) ->
+    return cb() unless @brain
+    @brain.nextMove cb
 
   setHQ: (location) ->
     @hq = @claimLocation location

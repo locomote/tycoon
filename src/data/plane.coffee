@@ -13,6 +13,9 @@ class Plane extends Model
     rnd = Math.random().toString(36).replace(/[^0-9a-f]+/g, '').substr(0, 6)
     Plane.create( name: "Plane-#{rnd}", flights_flown: 0, location: owner.hq.name, owner: owner )
 
+  @areAllLanded = ->
+    not _.find( @list, (plane) -> plane.isFlying() )
+
   isFlying: ->
     _.includes @location, '->'
 
@@ -25,4 +28,5 @@ Plane.create [
   {name: 'Plane6', flights_flown: 0, location: 'NYC', owner: Player.pink()}
 ]
 
+window.Plane = Plane
 module.exports = Plane
