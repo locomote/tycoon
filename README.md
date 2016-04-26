@@ -97,7 +97,7 @@ Accept-Language: en-US,en;q=0.8
     ...
   ]
 }
-
+```
 
 An API is expected to return movements for their Player planes.... i.e. IF an API
 is controlling the "Pink" team
