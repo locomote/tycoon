@@ -5,13 +5,6 @@ Game  = require('./game').instance()
 
 { Plane } = require '../data'
 
-MockPostRequest = (gameState, cb) ->
-  # TODO: formalise a response format that can be interpreted
-  # as commands - processAPICommands should be able to read and action
-  # an API response
-  response = {}
-  cb response
-
 class ApiBrain extends Brain
   constructor: (@url) ->
 
@@ -33,19 +26,28 @@ class ApiBrain extends Brain
 
       cb()
 
+  # Expected format:
+  # [
+  #    { name: "Plane1", location: "NYC->LHR" }
+  # ]
   processAPICommands: (planeInstructionList) ->
+    log = (str) ->
+      console.warn "Skipping Plane Instruction:", str
+      false
+
     parseRoute = (str) ->
-      return unless _.isString( str )
-      return unless _.includes( str, '->' )
-      return unless ( bits = str.split('->') ).length is 2
+      return log("Invalid Location")        unless _.isString( str )
+      return log("Invalid Location Format") unless _.includes( str, '->' )
+      return log("Invalid Location Format") unless ( bits = str.split('->') ).length is 2
       start : bits[0]
       end   : bits[1]
 
     _.each planeInstructionList, (data) =>
       instruction  = _.pick data, 'name', 'location'
+
       return unless route = parseRoute( instruction.location )
-      return unless plane = Plane.find(name: instruction.name, owner: @owner)
-      return unless plane.location is route.start
+      return log("Can't find Plane for Player")      unless plane = Plane.find(name: instruction.name, owner: @owner)
+      return log("Plane cannot fly route requested") unless plane.location is route.start
 
       plane.scheduleFlight route.end
 
