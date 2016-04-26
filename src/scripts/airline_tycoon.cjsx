@@ -110,8 +110,8 @@ Brains = React.createClass
       state[ player.name ] = false
 
     else
-      player.implant( brain = new LocoBrain ) # change to an ApiBrain if u like!
-      # player.implant( brain = new ApiBrain ) # change to an ApiBrain if u like!
+      player.implant( brain = new LocoBrain )
+      # player.implant( brain = new ApiBrain('http://localhost:9090/next_turn') )
       state[ player.name ] = true
 
     @setState( state )

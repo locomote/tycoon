@@ -1,6 +1,7 @@
 _      = require 'lodash'
 Model  = require './model'
 Player = require './player'
+Route  = require './route'
 
 class Plane extends Model
   @at: (location) ->
@@ -18,6 +19,12 @@ class Plane extends Model
 
   isFlying: ->
     _.includes @location, '->'
+
+  scheduleFlight: (endAirportCode)->
+    startAirportCode = @location
+    routeKey = "#{startAirportCode}->#{endAirportCode}"
+    return unless Route.find(key: routeKey)
+    @location = routeKey
 
   toJSON: ->
     _.extend _.pick( @, 'name', 'flights_flown', 'location' ),

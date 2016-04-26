@@ -32,7 +32,9 @@ class Game
     idx  = 0 if idx % Player.active().length is 0
 
     @lastCallTS = Date.now()
-    player.step next
+    player.step ->
+      MessageBus.publish 'dataChange'
+      next()
 
   selectAirport: (airportCode) ->
     Airport.selectByKey airportCode

@@ -3,6 +3,8 @@ $     = require 'jquery'
 Brain = require './brain'
 Game  = require('./game').instance()
 
+{ Plane } = require '../data'
+
 MockPostRequest = (gameState, cb) ->
   # TODO: formalise a response format that can be interpreted
   # as commands - processAPICommands should be able to read and action
@@ -17,7 +19,7 @@ class ApiBrain extends Brain
     # TODO - replace this Mock with something like $.post
     $.ajax(
       type        : 'POST'
-      url         : 'http://localhost:9090/next_turn'
+      url         : @url
       data        : JSON.stringify( Game.toJSON() )
       contentType : 'application/json; charset=utf-8'
       dataType    : 'json'
@@ -31,8 +33,20 @@ class ApiBrain extends Brain
 
       cb()
 
+  processAPICommands: (planeInstructionList) ->
+    parseRoute = (str) ->
+      return unless _.isString( str )
+      return unless _.includes( str, '->' )
+      return unless ( bits = str.split('->') ).length is 2
+      start : bits[0]
+      end   : bits[1]
 
-  processAPICommands: (response) ->
-    console.warn 'Process Api Commands not implemented'
+    _.each planeInstructionList, (data) =>
+      instruction  = _.pick data, 'name', 'location'
+      return unless route = parseRoute( instruction.location )
+      return unless plane = Plane.find(name: instruction.name, owner: @owner)
+      return unless plane.location is route.start
+
+      plane.scheduleFlight route.end
 
 module.exports = ApiBrain
