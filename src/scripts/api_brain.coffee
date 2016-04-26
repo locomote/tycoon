@@ -1,4 +1,5 @@
 _     = require 'lodash'
+$     = require 'jquery'
 Brain = require './brain'
 Game  = require('./game').instance()
 
@@ -14,9 +15,22 @@ class ApiBrain extends Brain
 
   nextMove: (cb = ->) ->
     # TODO - replace this Mock with something like $.post
-    MockPostRequest Game.toJSON(), (response) =>
-      @processAPICommands( response )
+    $.ajax(
+      type        : 'POST'
+      url         : 'http://localhost:9090/next_turn'
+      data        : JSON.stringify( Game.toJSON() )
+      contentType : 'application/json; charset=utf-8'
+      dataType    : 'json'
+    ).done (data) =>
+
+      try
+        @processAPICommands( data )
+
+      catch err
+        console.error "ERR on req:", err
+
       cb()
+
 
   processAPICommands: (response) ->
     console.warn 'Process Api Commands not implemented'

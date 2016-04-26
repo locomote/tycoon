@@ -2,6 +2,8 @@ _     = require 'lodash'
 Model = require './model.coffee'
 
 class Route extends Model
+  toJSON: ->
+    _.pick @, 'key', 'name', 'start', 'end'
 
 
 Route.create [

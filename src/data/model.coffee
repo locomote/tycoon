@@ -8,9 +8,15 @@ class Model
   @find: (attrs) ->
     _.find @list, attrs
 
+  @toJSON: ->
+    _.map @list, (i) -> i.toJSON()
+
   constructor: (attrs) ->
     @constructor.list ?= []
     @constructor.list.push @
     _.extend @, attrs
+
+  toJSON: ->
+    _.cloneDeep @
 
 module.exports = Model

@@ -3,6 +3,9 @@ Model  = require './model'
 Player = require './player'
 
 class Loyalty extends Model
+  toJSON: ->
+    _.extend _.pick(@, 'location', 'amount'),
+      owner: @owner?.name
 
 Loyalty.create [
   { location: 'NYC', amount: 0, owner: Player.blue() },

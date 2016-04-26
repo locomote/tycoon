@@ -19,6 +19,10 @@ class Plane extends Model
   isFlying: ->
     _.includes @location, '->'
 
+  toJSON: ->
+    _.extend _.pick( @, 'name', 'flights_flown', 'location' ),
+      owner: @owner?.name
+
 Plane.create [
   {name: 'Plane1', flights_flown: 0, location: 'MEL', owner: Player.blue()},
   {name: 'Plane2', flights_flown: 0, location: 'MEL', owner: Player.blue()},

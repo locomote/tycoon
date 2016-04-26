@@ -19,12 +19,19 @@ class Game
     next = =>
       requestAnimationFrame @step.bind(@, idx)
 
+    isTimeToPoll = =>
+      minPollFreq = 5 * 1000
+      (Date.now() - (@lastCallTS or 0) ) >= minPollFreq
+
+    return next() unless isTimeToPoll()
     return next() unless Plane.areAllLanded()
     return next() unless player = Player.active()[ idx ]
+
 
     idx += 1
     idx  = 0 if idx % Player.active().length is 0
 
+    @lastCallTS = Date.now()
     player.step next
 
   selectAirport: (airportCode) ->
@@ -93,9 +100,13 @@ class Game
 
     MessageBus.publish 'dataChange'
 
-  # TODO: formalize the Game state JSON, which will be posted to
-  # an API endpoint via used ApiBrains
   toJSON: ->
-    {}
+    players  : Player.toJSON()
+    loyalty  : Loyalty.toJSON()
+    airports : Airport.toJSON()
+    routes   : Route.toJSON()
+    planes   : Plane.toJSON()
+
+
 
 module.exports = Game
