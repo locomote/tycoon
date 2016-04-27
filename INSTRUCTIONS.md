@@ -26,21 +26,19 @@ To test out your API, a simple client side bot has been written to control a tea
 
 ![LocoBot](/public/images/brain.png)
 ## Player APIs
-On each turn, a player can move planes based upon instructions pulled from an external API. Enter the APIs endpoint into the relevant teams API textbox, then click on the brain.
+On each turn, a player can move planes based upon instructions pulled from an external API. Enter the APIs endpoint into the relevant teams API textbox (i.e. `http://myhost.com/my_endpoint`), then click on the brain.
 
 At the start of each turn, for a team with an api enabled, the current gamestate is posted to the configured endpoint:
 
 ### Posted Data
 
 ```
-POST /some_endpoint HTTP/1.1
+POST /my_endpoint HTTP/1.1
 Host: some_host:some_port
 Connection: keep-alive
-Content-Length: 1896
 Accept: application/json, text/javascript, */*; q=0.01
 Content-Type: application/json; charset=UTF-8
 Accept-Encoding: gzip, deflate
-Accept-Language: en-US,en;q=0.8
 
 
 {
