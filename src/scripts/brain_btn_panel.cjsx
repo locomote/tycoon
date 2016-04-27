@@ -78,22 +78,11 @@ LocoBrainBtn = React.createClass
   render: ->
     btnStyle =
       backgroundColor : @props.player.color
-      cursor          : 'pointer'
-      borderRadius    : '40px'
-      border          : "2px solid black"
-      margin          : "10px"
-      width           : "80px"
-      height          : "80px"
-      boxShadow       : "2px 2px 10px rgba(0,0,0,0.35)"
-      display         : 'inline-block'
-      float           : 'right'
 
-    if @state.selected
-      _.extend btnStyle,
-        border    : "2px solid green"
-        boxShadow : "0 0 10px green"
+    className = "brain-btn loco"
+    className += " selected" if @state.selected
 
-    <div style={ btnStyle } onClick={ @onClick }>
+    <div style={ btnStyle } className={className} onClick={ @onClick }>
       <img src="./images/loco-bot.png" />
     </div>
 
