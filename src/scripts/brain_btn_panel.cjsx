@@ -26,11 +26,14 @@ BrainBtnMixin =
       MessageBus.publish 'brain-deselected', @props.player
 
     else
-      @props.player.implant( @newBrain() )
+      return unless brain = @newBrain()
+      @props.player.implant( brain )
       MessageBus.publish 'brain-selected', @props.player
 
   getInitialState: ->
     selected: false
+
+
 
 ApiBrainBtn = React.createClass
   mixins: [
@@ -42,32 +45,21 @@ ApiBrainBtn = React.createClass
     ApiBrain
 
   newBrain: ->
-    new ApiBrain('http://localhost:9090/next_turn')
+    return unless url = document.querySelector(".api-url.#{@props.player.name}").value
+    new ApiBrain(url)
 
   render: ->
     btnStyle =
       backgroundColor : @props.player.color
-      cursor          : 'pointer'
-      borderRadius    : '40px'
-      border          : "2px solid black"
-      margin          : "10px"
-      width           : "80px"
-      height          : "80px"
-      boxShadow       : "2px 2px 10px rgba(0,0,0,0.35)"
-      display         : 'inline-block'
-      padding         : '7px'
-      float           : 'left'
 
-    if @state.selected
-      _.extend btnStyle,
-        border    : "2px solid green"
-        boxShadow : "0 0 10px green"
+    imgStyle = margin: "8px 0 0 0"
 
-    imgStyle =
-      margin: "8px 0 0 0"
+    className = "brain-btn api"
+    className += " selected" if @state.selected
 
-    <div style={ btnStyle } onClick={ @onClick }>
-      <img src="./images/brain.png" style={imgStyle} />
+    <div style={ btnStyle } className={ className }>
+      <input placeholder="Enter API url..." className="api-url #{@props.player.name}" />
+      <img src="./images/brain.png" style={imgStyle} onClick={ @onClick } />
     </div>
 
 
@@ -105,6 +97,8 @@ LocoBrainBtn = React.createClass
       <img src="./images/loco-bot.png" />
     </div>
 
+
+
 PlayerBrainPanel = React.createClass
   render: ->
     className = "player #{@props.player.name}"
@@ -113,6 +107,8 @@ PlayerBrainPanel = React.createClass
       <ApiBrainBtn player={@props.player}></ApiBrainBtn>
       <LocoBrainBtn player={@props.player}></LocoBrainBtn>
     </div>
+
+
 
 BrainBtnPanel = React.createClass
   render: ->
