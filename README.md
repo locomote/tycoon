@@ -137,5 +137,4 @@ is controlling the "Blue" team
 ```
 
 
-Incredibly simple player-api `https://github.com/benkitzelman/tycoon-sample-api`
 Platform forked from https://github.com/KyleAMathews/coffee-react-quickstart
