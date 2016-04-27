@@ -9,6 +9,7 @@ MoneyBalance  = require '../components/money_balance'
 LoyaltyList   = require '../components/loyalty_list'
 AlertOverlay  = require '../components/alert_overlay'
 RouteLines    = require '../components/route_lines'
+GameHelp      = require './help'
 PathAnimation = require './path_animation'
 LocoBrain     = require './loco_brain'
 ApiBrain      = require './api_brain'
@@ -43,6 +44,7 @@ module.exports = React.createClass
       <MoneyBalance players={[Player.blue(), Player.pink()]} />
       <BrainButtons players={[Player.blue(), Player.pink()]} />
       <AlertOverlay alerts={Alert.list} />
+      <GameHelp />
     </div>
 
 AirportMarker = React.createClass

@@ -14,8 +14,12 @@ class Game
   start: ->
     @step()
 
+  stop: ->
+    @_stop = true
+
   step: (idx = 0) ->
     next = =>
+      return delete @_stop if @_stop
       requestAnimationFrame @step.bind(@, idx)
 
     return next() unless player = Player.active()[ idx ]
@@ -87,9 +91,11 @@ class Game
 
     # Alert.create(message: 'Congratulations! You are the ultimate Airline Tycoon!')
     if Airport.where(owner: Player.pink()).length == 0
+      @stop()
       Alert.create(message: 'Congratulations! You are the ultimate Airline Tycoon!')
 
     else if Airport.where(owner: Player.blue()).length == 0
+      @stop()
       Alert.create(message: 'Oops, it seems youve been out-tycooned!')
 
     MessageBus.publish 'dataChange'

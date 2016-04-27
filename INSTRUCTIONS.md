@@ -119,5 +119,3 @@ is controlling the "Blue" team
 ]
 ```
 
-
-Platform forked from https://github.com/KyleAMathews/coffee-react-quickstart
