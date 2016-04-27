@@ -16,6 +16,7 @@ npm install -g gulp
 ```
 npm start
 ```
+
 Includes
 - Live reloading for both CSS and Javascript changes
 - `.cjsx`: JSX in Coffeescript
@@ -24,10 +25,29 @@ Includes
 
 
 
-##Player APIs
-On each turn, a player can move planes based upon instructions pulled from an external API.... Game state is posted to the api
+## Game Play
 
-i.e.
+The objective is to become the dominant airline at all airports controlled by your oponent. Gain dominance by flying your planes between airports
+
+* Every Flight earns loyalty at the landing airport - once loyalty reaches 100% - the airport becomes yours
+* Every Flight earns $100
+* When you reach $300, a plane is purchased at your airport HQ (beginning airport)
+
+### Click to play
+To test the game mechanics, you can move planes manually between airports, and watch as loyalty and $ increase.
+
+![LocoBot](/public/images/loco-bot.png)
+## Bot
+A simple client side bot has been written to control a team. Click the bot button for the relevant team to enable. Yes you can play bot vs bot
+
+
+![LocoBot](/public/images/brain.png)
+## Player APIs
+On each turn, a player can move planes based upon instructions pulled from an external API. Enter the APIs endpoint into the relevant teams API textbox, then click on the brain.
+
+At the start of each turn, for a team with an api enabled, the current gamestate is posted to the configured endpoint:
+
+### Posted Data
 
 ```
 POST /some_endpoint HTTP/1.1
@@ -41,6 +61,7 @@ Accept-Language: en-US,en;q=0.8
 
 
 {
+  "currentPlayer": "Blue",
   "players": [
     {
       "name": "Blue",
@@ -99,14 +120,19 @@ Accept-Language: en-US,en;q=0.8
 }
 ```
 
+
+### Expected Response Format
+
 An API is expected to return movements for their Player planes.... i.e. IF an API
-is controlling the "Pink" team
+is controlling the "Blue" team
+
 ```
 [
   {
-    "name": "Plane6",
-    "location": "NYC->LHR"
+    "name": "Plane1",
+    "location": "MEL->DUB"
   }
+  ...
 ]
 ```
 
