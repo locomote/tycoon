@@ -4,49 +4,25 @@ ApiBrain  = require './api_brain'
 LocoBrain = require './loco_brain'
 
 BrainBtnMixin =
-  componentDidMount:    ->
-    @subscribe 'brain-selected', @onBrainSelected
-    @subscribe 'brain-deselected', @onBrainSelected
-
-  componentWillUnmount: ->
-    @unsubscribe 'brain-selected'
-    @unsubscribe 'brain-deselected'
-
-  onBrainSelected: (player) ->
-    return unless player is @props.player
-
-    if @props.player.brain?.constructor is @brainConstructor()
-      @setState(selected: true)
-    else
-      @setState(selected: false)
-
-  onClick: ->
+  toggleBrain: ->
     if @props.player.brain
       delete @props.player.brain
-      MessageBus.publish 'brain-deselected', @props.player
+      @setState(selected: false)
 
     else
       return unless brain = @newBrain()
       @props.player.implant( brain )
-      MessageBus.publish 'brain-selected', @props.player
+      @setState(selected: true)
 
   getInitialState: ->
     selected: false
 
 
-
 ApiBrainBtn = React.createClass
-  mixins: [
-    MessageBusMixin
-    BrainBtnMixin
-  ]
-
-  brainConstructor: ->
-    ApiBrain
+  mixins: [ BrainBtnMixin ]
 
   newBrain: ->
-    return unless url = document.querySelector(".api-url.#{@props.player.name}").value
-    new ApiBrain(url)
+    new ApiBrain(@refs.url.value)
 
   render: ->
     btnStyle =
@@ -58,19 +34,13 @@ ApiBrainBtn = React.createClass
     className += " selected" if @state.selected
 
     <div style={ btnStyle } className={ className }>
-      <input placeholder="Enter API url..." className="api-url #{@props.player.name}" />
-      <img src="./images/brain.png" style={imgStyle} onClick={ @onClick } />
+      <input ref="url" placeholder="Enter API url..." className="api-url" />
+      <img src="./images/brain.png" style={imgStyle} onClick={ @toggleBrain } />
     </div>
 
 
 LocoBrainBtn = React.createClass
-  mixins: [
-    MessageBusMixin
-    BrainBtnMixin
-  ]
-
-  brainConstructor: ->
-    LocoBrain
+  mixins: [ BrainBtnMixin ]
 
   newBrain: ->
     new LocoBrain
@@ -82,7 +52,7 @@ LocoBrainBtn = React.createClass
     className = "brain-btn loco"
     className += " selected" if @state.selected
 
-    <div style={ btnStyle } className={className} onClick={ @onClick }>
+    <div style={ btnStyle } className={className} onClick={ @toggleBrain }>
       <img src="./images/loco-bot.png" />
     </div>
 
@@ -90,9 +60,7 @@ LocoBrainBtn = React.createClass
 
 PlayerBrainPanel = React.createClass
   render: ->
-    className = "player #{@props.player.name}"
-
-    <div className={className}>
+    <div className="player">
       <ApiBrainBtn player={@props.player}></ApiBrainBtn>
       <LocoBrainBtn player={@props.player}></LocoBrainBtn>
     </div>
