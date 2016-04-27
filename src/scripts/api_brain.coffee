@@ -8,12 +8,14 @@ Game  = require('./game').instance()
 class ApiBrain extends Brain
   constructor: (@url) ->
 
+  gameData: ->
+    _.extend Game.toJSON(), currentPlayer: @owner.name
+
   nextMove: (cb = ->) ->
-    # TODO - replace this Mock with something like $.post
     $.ajax(
       type        : 'POST'
       url         : @url
-      data        : JSON.stringify( Game.toJSON() )
+      data        : JSON.stringify( @gameData() )
       contentType : 'application/json; charset=utf-8'
       dataType    : 'json'
     ).done (data) =>
