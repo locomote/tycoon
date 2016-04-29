@@ -33,11 +33,13 @@ ul li {
   width: 20px;
   position: absolute;
   border-radius: 20px;
+  cursor: pointer;
 
   &.flight {
     background-image: url(/images/plane.png);
     background-repeat: no-repeat;
     background-position: top left;
+    cursor: none;
   }
 
 }
@@ -171,16 +173,15 @@ ul li {
     padding       : 5px;
   }
 
-  &.selected {
-    border     : 2px solid green;
-    box-shadow : 0 0 10px green;
-
-    .api-url {
-      border : 2px solid green;
-    }
+  &.selected .api-url {
+    border : 2px solid green;
   }
 }
+.selected {
+  border     : 2px solid green;
+  box-shadow : 0 0 10px green;
 
+}
 .help-btn {
   cursor           : pointer;
   background-color : blue;

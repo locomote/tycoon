@@ -68,10 +68,10 @@ AirportMarker = React.createClass
       top: @props.y
       left: @props.x
 
-    if @props.selected
-      _.extend style, border: '2px solid green'
+    className = "airport marker"
+    className += " selected" if @props.selected
 
-    <div className='airport marker' style={style} onClick={@select}>
+    <div className={ className } style={style} onClick={@select}>
       <div style={marginTop: 20, width: 100}><b>{@props.name}</b></div>
       <PlaneList planes={Plane.at(@props.name)} />
       <div className='customers'>D:{@props.customers}</div>

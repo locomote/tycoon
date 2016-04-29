@@ -3,7 +3,7 @@ Locomote Tycoon
 
 Play by API! Write an API to move your fleet, win airport dominance and take over the world.
 
-## Game Play
+## Game Rules
 
 The objective is to become the dominant airline at all airports controlled by your oponent. Gain dominance by flying your planes between airports
 
@@ -12,21 +12,13 @@ The objective is to become the dominant airline at all airports controlled by yo
 * When you reach $300, a plane is purchased at your airport HQ (beginning airport)
 
 
-
-### Test the mechanics - Click to play
-
-To test the game mechanics, you can move planes manually between airports, and watch as loyalty and $ increase. Manual clicking gives you a way to figure out the rules of the game, and stage decision points for your API.
-
-
+## First Steps
 
 ![LocoBot](/public/images/loco-bot.png)
-## Bot
-To test out your API, a simple client side bot has been written to control a team. Click the bot button for the relevant team to enable. Yes you can play bot vs bot
-
+Click the Robot Button for both teams, and see the game mechanics at play. **Your goal is to write an API to replace the Robot on one of the teams.**
 
 ![LocoBot](/public/images/brain.png)
-## Player APIs
-On each turn, a player can move planes based upon instructions pulled from an external API. Enter the APIs endpoint into the relevant teams API textbox (i.e. `http://myhost.com/my_endpoint`), then click on the brain.
+To use your API - enter the API's endpoint into the relevant teams API textbox (i.e. `http://myhost.com/my_endpoint`), then click on the brain.
 
 At the start of each turn, for a team with an api enabled, the current gamestate is posted to the configured endpoint:
 
@@ -116,4 +108,8 @@ is controlling the "Blue" team
   ...
 ]
 ```
+
+### Test the mechanics - Click to play
+
+To test the game mechanics, you can move planes manually between airports, and watch as loyalty and $ increase. Manual clicking gives you a way to figure out the rules of the game, and stage decision points for your API.
 
