@@ -8,8 +8,8 @@ Play by API! Write an API to move your fleet, win airport dominance and take ove
 The objective is to become the dominant airline at all airports controlled by your oponent. Gain dominance by flying your planes between airports
 
 * Every Flight earns loyalty at the landing airport - once loyalty reaches 100% - the airport becomes yours
-* Every Flight earns $100
-* When you reach $300, a plane is purchased at your airport HQ (beginning airport)
+* Every Flight earns you money! How much depends on the Route chosen. Route values can be found [here](/src/data/route.coffee)
+* When you reach $500, a plane is purchased at your airport HQ (beginning airport)
 
 
 ## First Steps
@@ -65,13 +65,15 @@ Accept-Encoding: gzip, deflate
       "key": "NYC->LHR",
       "name": "NYC->LHR",
       "start": "NYC",
-      "end": "LHR"
+      "end": "LHR",
+      "flightValue": 200
     },
     {
       "key": "LHR->NYC",
       "name": "LHR->NYC",
       "start": "LHR",
-      "end": "NYC"
+      "end": "NYC",
+      "flightValue": 50
     }
     ...
   ],

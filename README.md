@@ -28,3 +28,4 @@ Includes
 
 
 Platform forked from https://github.com/KyleAMathews/coffee-react-quickstart
+Sample Tycoon API can be found at (https://github.com/locomote/tycoon-sample-api)

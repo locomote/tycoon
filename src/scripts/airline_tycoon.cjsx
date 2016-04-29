@@ -45,6 +45,7 @@ module.exports = React.createClass
       <BrainButtons players={[Player.blue(), Player.pink()]} />
       <AlertOverlay alerts={Alert.list} />
       <GameHelp />
+      <div className="footnote">Try the Example API. Enter url 'https://tycoon-sample-api-bgpqqplrhw.now.sh/next_turn'</div>
     </div>
 
 AirportMarker = React.createClass
