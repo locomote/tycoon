@@ -2,7 +2,8 @@ require './message_bus'
 _       = require 'lodash'
 { Alert, Plane, Airport, Loyalty, Player, Route } = require '../data'
 
-instance = null
+PLANE_COST = 500
+instance   = null
 
 class Game
   @instance = ->
@@ -12,6 +13,7 @@ class Game
     instance
 
   start: ->
+    delete @_stop
     @step()
 
   stop: ->
@@ -19,13 +21,14 @@ class Game
 
   step: (idx = 0) ->
     next = =>
-      return delete @_stop if @_stop
+      return if @_stop
       requestAnimationFrame @step.bind(@, idx)
 
     return next() unless player = Player.active()[ idx ]
     return next() unless Plane.areAllLanded()
 
     player.step ->
+      return if @_stop
       MessageBus.publish 'dataChange'
 
       idx += 1
@@ -51,25 +54,26 @@ class Game
   landPlane: (plane) ->
     # @todo flight ordering on landing
     return unless plane.isFlying()
+    return unless route = Route.find(key: plane.location)
 
     plane.location = plane.location.split('->')[1]
-    @processRewardsFor plane
+    @processRewardsFor plane, route
     MessageBus.publish 'dataChange'
 
   buyPlane: (player) ->
     Plane.createFor( player )
-    player.money -= 300
+    player.money -= PLANE_COST
     MessageBus.publish 'dataChange'
 
-  processRewardsFor: (plane) =>
-
+  processRewardsFor: (plane, route) =>
+    return if @_stop
     # Every flight increases our flown count
     # @todo retire planes flown > 4
     plane.flights_flown++
 
     # Reward every landing
     owner = plane.owner
-    owner.money += 100
+    owner.money += route.flightValue
 
     # Loyalty increases when Airport is not ours
     loyalty = Loyalty.find(location: plane.location, owner: owner)
@@ -85,7 +89,7 @@ class Game
         # It's a big marketing win, all other loyalties take a hit!
         loyalty.amount = 0 for loyalty in Loyalty.where(location: airport.name)
 
-    if owner.money >= 300
+    while owner.money >= PLANE_COST
       # Buy more planes!
       @buyPlane(owner)
 
