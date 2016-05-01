@@ -1,7 +1,7 @@
 Locomote Tycoon
 ===============
 
-Play by API! Write an API to move your fleet, win airport dominance and take over the world.
+Play by API! Write a JSON Web Service to move your fleet, win airport dominance and take over the world.
 
 ## Game Rules
 
@@ -15,7 +15,7 @@ The objective is to become the dominant airline at all airports controlled by yo
 ## First Steps
 
 ![LocoBot](/public/images/loco-bot.png)
-Click the Robot Button for both teams, and see the game mechanics at play. **Your goal is to write an API to replace the Robot on one of the teams.**
+Click the Robot Button for both teams, and see the game mechanics at play. **Your goal is to write an JSON Web Service to replace the Robot on one of the teams.**
 
 ![LocoBot](/public/images/brain.png)
 To use your API - enter the API's endpoint into the relevant teams API textbox (i.e. `http://myhost.com/my_endpoint`), then click on the brain.
