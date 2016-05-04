@@ -23,9 +23,8 @@ Includes
 
 `gulp build` to create minified versions for prod.
 
+Currently deployed to http://locomote-tycoon.s3-website-ap-southeast-2.amazonaws.com/
 
-```
-
+Sample Tycoon API can be found at (https://github.com/locomote/tycoon-sample-api)
 
 Platform forked from https://github.com/KyleAMathews/coffee-react-quickstart
-Sample Tycoon API can be found at (https://github.com/locomote/tycoon-sample-api)
