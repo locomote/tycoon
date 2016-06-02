@@ -115,3 +115,9 @@ is controlling the "Blue" team
 
 To test the game mechanics, you can move planes manually between airports, and watch as loyalty and $ increase. Manual clicking gives you a way to figure out the rules of the game, and stage decision points for your API.
 
+### GOALS
+
+The idea is to build some intelligence into how you organise your fleet of planes. Some routes are good money earners, money buys you planes. How will you position your planes; balancing the growth of your fleet, while expanding / defending your locations?
+
+For applicants, the test is purposefully open ended, but as a minimum, try and build a service that will defeat the Bot :)
+
