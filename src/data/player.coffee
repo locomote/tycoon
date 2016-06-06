@@ -35,7 +35,9 @@ class Player extends Model
     @brain.owner = @
 
   toJSON: ->
-    _.pick @, 'name', 'color', 'money'
+    o = _.pick @, 'name', 'color', 'money'
+    o.hq = @hq?.key
+    o
 
 Player.create [
   { name: 'Blue', color: blue, money: 0 }

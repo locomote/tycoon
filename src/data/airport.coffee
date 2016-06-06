@@ -13,7 +13,10 @@ class Airport extends Model
     airport.selected = true  for airport in @list when airport.name is airportCode
 
   toJSON: ->
-    _.pick @, 'key', 'name', 'x', 'y'
+    o = _.pick @, 'key', 'name', 'x', 'y'
+    o.owner = @.owner?.name or 'None'
+    o
+
 
 Airport.create [
   { key: 'NYC', name: 'NYC', x: 330, y: 300, customers: 200, selected: false },
