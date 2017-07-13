@@ -4,6 +4,9 @@
   "version": "0.0.1",
   "author": "Locomote (Various) <support@locomote.com>",
   "bugs": "https://github.com/locomote/tycoon/issues",
+  "engines": {
+    "node": "= 6.11.1"
+  },
   "dependencies": {
     "cjsx-loader": "^2.0.1",
     "coffee-loader": "^0.7.2",
